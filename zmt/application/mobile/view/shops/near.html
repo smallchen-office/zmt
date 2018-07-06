@@ -1,0 +1,81 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="tpshop" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>附近-{$Think.config.web_site_title}</title>
+    {include file="public/head" /}
+    <link rel="stylesheet" href="/static/mobile/css/flow.css">
+    <link rel="stylesheet" href="/static/mobile/css/style_jm.css">
+</head>
+<body style="background: rgb(235, 236, 237);position:relative;">
+<!--购物车头部 start-->
+<!-- <div class="tab_nav"> -->
+    <!-- <div class="header"> -->
+        <!-- <div class="h-left"> -->
+            <!-- <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a> -->
+        <!-- </div> -->
+        <!-- <div class="h-mid">附近</div> -->
+    <!-- </div> -->
+<!-- </div> -->
+<!--购物车头部 end-->
+
+<!--购物车商品列表 start-->
+<div class="screen-wrap fullscreen login">
+    <div class="page-shopping ">
+        <div class="cart_list">
+            <form id="cart_form" name="formCart" method="post">
+				<style type="text/css">
+					.page-shopping .bottom-panel{display: flex;}
+					.page-shopping .bottom-panel .info{margin-top: 4px;width: 50%;}
+					.page-shopping .bottom-panel .right{margin-top: 10px;}
+					.page-shopping .item-list .attr span{overflow: hidden;display: -webkit-box; font-weight: normal; white-space: nowrap;}
+				</style>
+				{empty name="shop_list" value=""}
+				{else/}
+				{foreach $shop_list as $k=>$v}
+				<div  class="block" style="margin-top:0px;">
+					<a href="#">
+						<div class="item-list">
+							<div class="item">
+								<div class="inner">
+									<div style="width:60%; float:left; height:98px;">
+										<div  class="pic">
+											<img src="{$v.head_img}">
+										</div>
+										<div class="name">
+											<span>  {$v.name} </span>
+										</div>
+										<div class="attr">
+											<span>{$v.name}-{$v.name}</span>
+										</div>
+										<div class="attr">
+											<span>{:getSubstr($v.name,0,10)}</span>
+										</div>
+									</div>
+									<div style=" position:absolute; right:0px; top:20px; width:100px; height:98px;">
+										{$v.range}
+									</div>
+									<div style="height:0px; line-height:0px; clear:both;"></div>
+								</div>
+								<div class="append"></div>
+							</div>
+						</div>
+					</a>
+				</div>
+				<form id="selcartValidate">
+					{:token()}
+				</form>
+				{/foreach}
+				{/empty}
+            </form>
+        </div>
+    </div>
+    <div style="height:72px;"></div>
+</div>
+<!--购物车商品列表 end-->
+<div style="height:50px"></div>
+{include file="public/footer_nav" /}
+</body>
+</html>

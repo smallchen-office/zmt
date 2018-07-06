@@ -1,0 +1,23 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="TPshop1.2" />
+    <meta charset="urlTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>个人中心-{$Think.config.web_site_title}</title>
+    {include file="public/head" /}
+</head>
+<body>
+{include file="public/top" /}
+<div id="tbh5v0">
+    <div class="Wallet">
+		{foreach shop_group_auth as $v}
+			<em class="glyphicon glyphicon-{$v.ico}"></em><a href="{eq name='$v.link' value=''}{:url('mobile/role/rulecate',['id'=>$v.id])}{else}{$v.link}{/eq}"><dl class="b"><dt>{$v.title}</dt><dd>&nbsp;</dd></dl></a>
+		{/foreach}
+    </div>
+	<div style="height:50px"></div>
+</div>
+{include file="public/footer_nav" /}
+
+</body>
+</html>

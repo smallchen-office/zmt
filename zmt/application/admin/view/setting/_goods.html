@@ -1,0 +1,119 @@
+{include file="public/header" /}
+<style type="text/css">
+    .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th { border: 1px solid #e7e7e7; } #imgPicker div:first-child{ position: absolute;  width: 85px; height: 40px; } .goods_xc{ width: 100px; text-align:center; margin: 5px; display:inline-block; }
+</style>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>基础资料·商品设置·添加编辑主商品</h5>
+                    <div class="ibox-tools">
+                        <div class="ibox-tools">
+                            <a href="javascript:history.go(-1)"  title="返回">
+                                <i class="fa fa-reply"> 返回</i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <form  method="post" action="{:url('goodsHandle',['id'=>$id])}" id="btnForm">
+                    <div class="ibox-content">
+                        <!--<div class="clients-list">-->
+                        <div class="tab-content" >
+                            <!--通用信息    start-->
+                            <div id="tab-basic" class="tab-pane active" >
+                                <div class="hr-line-dashed"></div>
+                                <div class="full-height-scroll">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <tbody>
+												<tr>
+													<td width="20%">商品名称：</td>
+													<td>
+														<div class=" col-sm-4">
+															<input type="text" class="form-control" name="name"  value="{$info.name}" placeholder="商品名称">
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td width="20%">商品长名称：</td>
+													<td>
+														<div class=" col-sm-4">
+															<input type="text" class="form-control" name="longname"  value="{$info.longname}" placeholder="商品长名称">
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>商品分类：</td>
+													<td>
+														<div class="col-md-3">
+															<select class="form-control m-b chosen-select " name="cate_id" id="pid" >
+																<option value="">请选择分类</option>
+																{foreach $p_list as $k=>$v}
+																	<option value="{$v.id}" {eq name="info.cate_id" value="$v.id"}selected{/eq}>{:str_repeat('— ',$v.deep*1)}{$v.name}</option>
+																{/foreach}
+															</select>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>商品品牌：</td>
+													<td>
+														<div class="col-md-2">
+															<select class="form-control m-b chosen-select" name="brand_id" >
+																<option value="0">请选择品牌</option>
+																{foreach $brand_list as $k=>$v}
+																<option value="{$k}" {eq name="info.brand_id" value="$k"}selected{/eq}>{$v}</option>
+																{/foreach}
+															</select>
+														</div>
+													</td>
+												</tr>
+                                            
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--通用信息    end-->
+                            <div class="form-group" >
+                                <div class="col-sm-4 col-sm-offset-3">
+                                    <a class="btn btn-primary" id="saveBtn"><i class="fa fa-save"></i> 保存</a>&nbsp;&nbsp;&nbsp;
+                                    <a class="btn btn-danger" href="javascript:history.go(-1);"><i class="fa fa-close"></i> 返回</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!--</div>-->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{include file="public/footer" /}
+
+</body>
+</html>
+<script type="text/javascript">
+    /*表单提交*/
+    $("#saveBtn").click(function() {
+        //通用信息
+        var goods_name = $("input[name=name]").val();//商品名称
+        var goods_category_id = $("select[name=cate_id]").val();//商品分类
+        var goods_brand_id = $("select[name=brand_id]").val();//商品品牌
+        if (isEmpty('', goods_name, '商品名称不能为空') == false) {
+            return false;
+        }
+        if (isEmpty('', goods_category_id, '请选择商品分类') == false) {
+            return false;
+        }
+        if (isEmpty('', goods_brand_id, '请选择商品品牌') == false) {
+            return false;
+        }
+
+        ajaxFormBtn("{:url('goodsHandle',['id'=>$id])}", 'btnForm');
+    });
+</script>

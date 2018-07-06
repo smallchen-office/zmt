@@ -1,0 +1,86 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="TPshop1.2" />
+    <meta charset="urlTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>创建数据-{$Think.config.web_site_title}</title>
+        <link href="/static/admin/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	 {include file="public/head" /}
+	 <link rel="stylesheet" href="/static/mobile/css/user.css">
+	<style type="text/css">
+		#imgPicker div:first-child{ position: absolute;  width: 120px; height: 40px; } 
+		.goods_xc{ width: 100px; text-align:center; margin: 5px; display:inline-block; }
+	</style>
+</head>
+<body>
+{include file="public/right_menu" /}
+<div id="tbh5v0">
+    <div class="addressmone">
+        <form  onSubmit="return false" id="btnForm">
+            <ul>
+			<li>
+                <span>商品分类</span>
+				<select class="chosen-select" width="100%" name="goods_id" id="goods_id" onchange="getStock0(this)">
+					<option value="">请选择对应商品</option>
+					{foreach $goods_list as $k=>$v}
+						<option value="{$v['id']}">{$v['title']}</option>
+					{/foreach}
+				</select>
+            </li>
+			<li>
+				<span>期初数量</span>
+                <input type="number" step="0.01" min="0.01" placeholder="期初数量" readonly id="number0">
+			</li>
+			<li>
+                <span>变更数量</span>
+                <input name="number1" type="number" step="0.01" min="0.01" placeholder="变更数量" id="number1">
+            </li>
+			<li>
+                <span>变更原因</span>
+				<textarea class="span12" id="detail" name="detail" title="" style="width:100%;max-height:300px;"></textarea>
+            </li>		
+			</ul>			
+            <div style=" height:30px"></div>
+            <div class="field submit-btn">
+				<input type="submit" class="btn_big1" value="提交保存" id="saveBtn" style="background:#4169E1"/>
+			</div>
+            {:token()}
+        </form>
+    </div>
+</div>
+<script src="/static/admin/js/jquery.min.js?v=2.1.4"></script>
+<script src="/static/admin/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="/static/admin/js/jquery.easyui.min.js"></script>
+
+<script type="text/javascript">
+    /*表单提交*/
+    $("#saveBtn").click(function(){
+
+        mobileAjaxFormBtn("{:url('mobile/shops/Data_create',['cate_id'=>$cate_id])}",'btnForm');
+    });
+
+	var config = {
+		'.chosen-select': {},
+	}
+	for (var selector in config) {
+		$(selector).chosen(config[selector]);
+	}
+	function getStock0(obj){
+        var pid = $(obj).val();
+		$("#number0").val('0');
+        $.ajax({
+            type: "POST",
+            url: "/mobile/shops/getStock0/goods_id/"+pid,
+            success: function(data){
+				$("#number0").val(data);
+            },
+            error:function(){
+                layer.open({content:'网络错误,请稍后再试',time: 100});
+                return false;
+            }
+        });
+    };
+</script>
+</body>
+</html>

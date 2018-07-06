@@ -1,0 +1,245 @@
+{include file="public/header" /}
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak={$Think.config.baidu_map_api}"></script>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="fa fa-bars"> 管理店铺·店铺信息</h5>
+                    <div class="ibox-tools">
+                        <a href="javascript:history.go(-1)"  title="返回">
+                            <i class="fa fa-reply"> 返回</i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t"  method="post" action="{:url('shopHandle',['id'=>$info.id])}" id="btnForm">
+						<div class="ibox-content">
+							<!--<div class="clients-list">-->
+							<ul class="nav nav-tabs">
+								<li class="active"><a data-toggle="tab" href="#tab-basic"><i class="fa fa-book"></i> 通用信息</a></li>
+								<li ><a data-toggle="tab" href="#tab-img"><i class="fa fa-map"></i> 位置信息</a></li>
+							</ul>
+							<div class="tab-content" >
+								<!--通用信息    start-->
+								<div id="tab-basic" class="tab-pane active" >
+									<div class="hr-line-dashed"></div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">店铺名称：</label>
+											<div class="input-group col-sm-4">
+												<input  type="text" class="form-control" name="name" value="{$info.name}" placeholder="店铺名称">
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">店铺分类：</label>
+											<div class="input-group col-sm-4">
+												<select class="form-control m-b chosen-select" name="cate_id" >
+													<option value="0">请选择配置分组</option>
+													{foreach $cate_list as $k=>$v}
+													<option value="{$k}" {eq name="$k" value="$info.cate_id"}selected{/eq}>{$v}</option>
+													{/foreach}
+												</select>
+											</div>
+										</div>
+										<div class="hr-line-dashed"></div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">联系人：</label>
+											<div class="input-group col-sm-4">
+												<input  type="text" class="form-control" name="author" value="{$info.author}" placeholder="联系人">
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">联系电话：</label>
+											<div class="input-group col-sm-4">
+												<input  type="text" class="form-control" name="telephone" value="{$info.telephone}" placeholder="联系电话">
+											</div>
+										</div>
+										
+										<div class="hr-line-dashed"></div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">店铺描述：</label>
+											<div class=" col-sm-8">
+												<textarea class="span12 ckeditor" id="content" name="content" title="" style="height:800px;max-height:1000px;">{$info.content}</textarea>
+
+											</div>
+
+										</div>
+										{if $info.id neq 0}
+										<div class="hr-line-dashed"></div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label">状态：</label>
+											<div class="input-group col-sm-4">
+												<div class="radio i-checks">
+													<input type="radio" name='status' value="-1" checked />禁用&nbsp;&nbsp;
+													<input type="radio" name='status' value="0" {eq name="info.status" value="0"}checked{/eq} />未开业&nbsp;&nbsp;
+													<input type="radio" name='status' value="1" {eq name="info.status" value="1"}checked{/eq}/>正常&nbsp;&nbsp;
+													<input type="radio" name='status' value="2" {eq name="info.status" value="2"}checked{/eq}/>闭店&nbsp;&nbsp;
+												</div>
+											</div>
+										</div>
+										{/if}
+								</div>
+								<div id="tab-img" class="tab-pane ">
+									<div class="hr-line-dashed"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">区域位置：</label>
+										<div class="input-group col-sm-4">
+											<div class="col-sm-4">
+												<select class="form-control m-b chosen-select" name="province_id" onchange="getCityInterface(this,2)">
+													<option value="0">请选择</option>
+													{foreach $province as $v}
+														<option value="{$v.id}" {eq name="$v.id" value="$info.province_id"}selected{/eq}>{$v.name}</option>
+													{/foreach}
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<select class="form-control m-b chosen-select" name="city_id" onChange="getCityInterface(this,3)" id="city_id">
+													<option value="0">请选择</option>
+													{foreach $city as $v}
+														<option value="{$v.id}" {eq name="$v.id" value="$info.city_id"}selected{/eq}>{$v.name}</option>
+													{/foreach}
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<select class="form-control m-b chosen-select" name="area_id" id="area_id">
+													<option value="0">请选择</option>
+													{foreach $area as $v}
+														<option value="{$v.id}" {eq name="$v.id" value="$info.area_id"}selected{/eq}>{$v.name}</option>
+													{/foreach}
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="hr-line-dashed"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">详细地址：</label>
+										<div class="input-group col-sm-4">
+											<input  type="text" class="form-control" name="address" value="{$info.address}" placeholder="详细地址">
+										</div>
+									</div>
+									<div class="hr-line-dashed"></div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">店铺地图：</label>
+										<div class="input-group col-sm-4">
+											<div id="allmap" style="width:100%;height:400px;"></div>
+											<input  type="text" class="form-control" name="map" value="{$info.map}" id="maps">
+										</div>
+									</div>
+									<script type="text/javascript">
+										// 百度地图API功能
+										var map = new BMap.Map("allmap");    // 创建Map实例
+										var point = new BMap.Point({$info.map});
+										map.centerAndZoom(point, 15);
+
+										map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+										
+										function showInfo(e){
+											map.clearOverlays(); 
+											$("#maps").val(e.point.lng + ", " + e.point.lat);
+
+											var mk = new BMap.Marker(e.point);
+											map.addOverlay(mk);               // 将标注添加到地图中
+											marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+										}
+										map.addEventListener("click", showInfo);
+										
+										
+										var mk = new BMap.Marker(point);
+										map.addOverlay(mk);               // 将标注添加到地图中
+										marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+	
+									</script>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-sm-4 col-sm-offset-3">
+									<a class="btn btn-primary" id="saveBtn"><i class="fa fa-save"></i> 保存</a>&nbsp;&nbsp;&nbsp;
+									<a class="btn btn-danger" href="javascript:history.go(-1);"><i class="fa fa-close"></i> 返回</a>
+								</div>
+							</div>
+						</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/footer" /}
+
+<script>
+    /*表单提交*/
+    $("#saveBtn").click(function(){
+        if(isEmpty('',$("input[name=name]").val(),'店铺名称不能为空') == false){return false;};
+        ajaxFormBtn("{:url('shopHandle',['id'=>$info.id])}",'btnForm');
+    });
+
+	/**
+     * 根据省份id获取省份下面的城市列表
+     */
+    function getCityInterface(obj,deep){
+        var pid = $(obj).val();//当前选中的省id
+        $("#area_id").empty().html('<option value="0">请选择</option>');
+        $.ajax({
+            type: "POST",
+            url: "/home/Api/getTwon/level/"+deep+"/pid/"+pid,
+            success: function(data){
+                var res = '<option value="0">请选择</option>'+ data;
+				if(deep=="2")
+					$("#city_id").empty().html(res);
+				if(deep=="3")
+					$("#area_id").empty().html(res);
+            },
+            error:function(){
+                layer.open({content:'网络错误,请稍后再试',time: 100});
+                return false;
+            }
+        });
+    };
+</script>
+</body>
+</html>
+
+<!--以下是在线编辑器 代码 -->
+<link rel="stylesheet" type="text/css" href="/static/admin/wangeditor/css/wangEditor.min.css">
+<!--//防xss攻击js-->
+<script src="/static/admin/js/xss.js"></script>
+
+<!--引入jquery和wangEditor.js-->   <!--注意：javascript必须放在body最后，否则可能会出现问题-->
+<script type="text/javascript" src="/static/admin/wangeditor/js/wangEditor.min.js"></script>
+
+<!--这里引用jquery和wangEditor.js-->
+<script type="text/javascript">
+    var editor = new wangEditor('content');
+    // 配置自定义表情
+    editor.config.emotions = {
+        'default': {
+            title: '常用',  // 组名称
+            data: '/static/admin/wangeditor/js/emotions.data'
+        },
+        /* 第二组，id叫做'weibo'*/
+        'weibo': { title: '微博表情', /* 组名称*/ data: [/* data 还可以直接赋值为一个表情包数组*/ {icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/7a/shenshou_thumb.gif', value: '[草泥马]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/60/horse2_thumb.gif', value: '[神马]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/fuyun_thumb.gif', value: '[浮云]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c9/geili_thumb.gif', value: '[给力]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/f2/wg_thumb.gif', value: '[围观]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/70/vw_thumb.gif', value: '[威武]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6e/panda_thumb.gif', value: '[熊猫]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/81/rabbit_thumb.gif', value: '[兔子]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/otm_thumb.gif', value: '[奥特曼]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/15/j_thumb.gif', value: '[囧]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/89/hufen_thumb.gif', value: '[互粉]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c4/liwu_thumb.gif', value: '[礼物]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/ac/smilea_thumb.gif', value: '[呵呵]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/0b/tootha_thumb.gif', value: '[哈哈]'}]}
+    };
+    editor.config.pasteFilter = false;// 粘贴过滤
+    // 只粘贴纯文本
+    // （注意，如果你在上面设置了 editor.config.pasteFilter = false 那么这个粘贴纯文本的设置将失效）
+    editor.config.pasteText = false;
+
+    // 上传图片
+    editor.config.uploadImgUrl = "{:url('Uploadify/editUpload')}";
+    editor.config.uploadImgFileName = 'myfile'// 配置上传文件名
+
+    // 配置自定义参数
+    editor.config.uploadParams = {
+        path:'shop'
+    };
+    // 设置 headers
+    editor.config.uploadHeaders = {
+        'Accept' : 'text/x-json'
+    };
+    // 隐藏掉插入网络图片功能。该配置，只有在你正确配置了图片上传功能之后才可用。
+    editor.config.hideLinkImg = false;
+    editor.create();
+
+</script>
+<!--以上是在线编辑器 代码  end-->

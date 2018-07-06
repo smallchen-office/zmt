@@ -1,0 +1,127 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="TPshop1.2" />
+    <meta charset="urlTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>编辑地址-{$Think.config.web_site_title}</title>
+    
+   
+<link href="/static/admin/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+ <link rel="stylesheet" href="/static/mobile/css/user.css">
+ {include file="public/head" /}
+</head>
+<body>
+<header>
+    <div class="tab_nav">
+        <div class="header">
+            <div class="h-left"><a class="sb-back" href="javascript:history.back(-1)" title="返回"></a></div>
+            <div class="h-mid">注册</div>
+        </div>
+    </div>
+</header>
+{include file="public/right_menu" /}
+<div id="tbh5v0">
+    <div class="addressmone">
+        <form  onSubmit="return false" id="btnForm">
+            <ul>
+			<li>
+                <span>店铺名称</span>
+                <input name="name" type="text" placeholder="店铺名称" />
+            </li>
+			<li>
+                <span>注册分类</span>
+                <select class="chosen-select" width="100%" name="cate_id" >
+					<option value="0">请选择注册分组</option>
+					{foreach $cate_list as $k=>$v}
+					<option value="{$k}">{$v}</option>
+					{/foreach}
+				</select>
+            </li>
+			<li>
+                <span>注册账号</span>
+                <input name="username" type="text" maxlength="12" placeholder="注册账号" />
+            </li>
+			<li>
+                <span>注册密码</span>
+                <input name="password" type="text" maxlength="12" placeholder="注册密码" />
+            </li>
+			<li style="height:10px"></li>
+            <li>
+                <span>联系人姓名</span>
+                <input name="author" type="text" maxlength="12" placeholder="联系人姓名" />
+            </li>
+            <li>
+                <span>地区</span>
+                <select class="province_select"  name="province_id" onchange="getCity(this)">
+                    <option value="">请选择省份</option>
+                   {foreach $province as $k=>$v}
+                        <option  value="{$v.id}" >{$v.name}</option>
+                    {/foreach}
+                </select>
+                <select name="city_id" id="city" onChange="getArea(this)">
+                    <option  value="">请选择城市</option>
+                </select>
+                <select name="area_id" id="district" onChange="getTown(this)">
+                    <option  value="">请选择区域</option>
+                </select>
+				<select class="di-bl fl seauii" name="twon_id" id="twon" style="display:none;">
+                </select>
+            </li>
+            <li>
+                <span>详细地址</span> <input type="text"  name="address"  placeholder="详细地址" maxlength="100"/>
+            </li>
+            <li>
+                <span>手机</span>
+                <input type="text" name="telephone" maxlength="15" placeholder="手机号码"/>
+            </li>
+			<li>
+                <span>注册简介</span>
+				<textarea class="span12 ckeditor" name="content" title="" style="width:100%;height:100px"></textarea>
+            </li>
+            </ul>
+            <div style=" height:30px"></div>
+            <div class="field submit-btn">
+					<input type="submit" class="btn_big1" value="提交保存" id="saveBtn" style="background:#4169E1"/>
+				</div>
+            {:token()}
+        </form>
+    </div>
+</div>
+<script src="/static/admin/js/jquery.min.js?v=2.1.4"></script>
+<script src="/static/admin/js/bootstrap.min.js?v=3.3.6"></script>
+<script type="text/javascript">
+    /*表单提交*/
+    $("#saveBtn").click(function(){
+        var name = $("input[name=author]").val();
+        var province_id = $("select[name=province_id]").val();
+        var city_id = $("select[name=city_id]").val();
+        var area_id = $("select[name=area_id]").val();
+        var address = $("input[name=address]").val();
+        var mobile =$("input[name=mobile]").val();
+
+        if( name == ''){
+            layer.open({content:'联系人不能为空',time: 1});
+            return false;
+        }
+        if(province_id == ''){
+            layer.open({content:'请选择省份',time: 1});
+            return false;
+        }
+        if(city_id ==''){
+            layer.open({content:'请选择城市',time: 1});
+            return false;
+        }
+        if(area_id == ''){
+            layer.open({content:'请选择区域',time: 1});
+            return false;
+        }
+        if(address == ''){
+            layer.open({content:'详细地址不能为空',time: 1});
+            return false;
+        }
+        mobileAjaxFormBtn("{:url('mobile/Urlser/reg',['id'=>$recommend])}",'btnForm');
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+{include file="public/header" /}
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="fa fa-bars"> 我的店铺·我的管理员·添加修改管理员</h5>
+                    <div class="ibox-tools">
+                        <a href="javascript:history.go(-1)"  title="返回">
+                            <i class="fa fa-reply"> 返回</i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t"  method="post" action="{:url('userHandle',['id'=>$id])}" id="btnForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">用户名：</label>
+                            <div class="input-group col-sm-4">
+                                <input id="username" type="text" class="form-control" {if condition="$id eq 0" } name="username"{else} readonly {/if} value="{$info.username}" placeholder="用户名">
+                                <span class="lbl" style="color: #ff0000;">tps: 由3-16位之间的数字、字母、下划线组成</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">密码：</label>
+                            <div class="input-group col-sm-4">
+                                <input type="password" class="form-control" name="password"  value="" placeholder="密码">
+                                <span class="lbl" style="color: #ff0000;">tps: 修改密码时填写。由6-18位之间的数字、字母、下划线组成</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">密码确认：</label>
+                            <div class="input-group col-sm-4">
+                                <input type="password" class="form-control" name="password_c"  placeholder="密码确认">
+                            </div>
+                        </div>
+						<div class="hr-line-dashed"></div>
+						<div class="form-group">
+                            <label class="col-sm-3 control-label">联系人：</label>
+                            <div class="input-group col-sm-4">
+                                <input type="text" class="form-control" name="realname"  value="{$info.realname}" placeholder="联系人">
+                            </div>
+                        </div>
+						<div class="form-group">
+                            <label class="col-sm-3 control-label">联系电话：</label>
+                            <div class="input-group col-sm-4">
+                                <input type="text" class="form-control" name="telephone"  value="{$info.telephone}" placeholder="联系电话">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-3">
+                                <a class="btn btn-primary" id="saveBtn"><i class="fa fa-save"></i> 保存</a>&nbsp;&nbsp;&nbsp;
+                                <a class="btn btn-danger" href="javascript:history.go(-1);"><i class="fa fa-close"></i> 返回</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/footer" /}
+<script type="text/javascript">
+    /*表单提交*/
+    $("#saveBtn").click(function(){
+        if(isEmpty('',$("input[id=username]").val(),'用户名不能为空') == false){return false;}
+        if(prexRule( /^[a-z0-9_-]{3,16}$/,$("input[id=username]").val(),'用户名只能是在3-16位之间') == false){return false;}
+        var id ="{$id}";
+        var password = $("input[name=password]").val();
+        var password_c = $("input[name=password_c]").val();
+        if(id <1 ){
+            if(isEmpty('',password,'请填写密码') == false){return false;}
+            if(prexRule( /^[a-z0-9_-]{6,18}$/,password,'密码只能是6-18位之间的数字、字母、下划线') == false){return false;}
+            if(!password || $.trim(password )!= $.trim(password_c)){
+                layer.msg('两次输入的密码不一致', {icon: 5,time:2000}, function(index){
+                    layer.close(index);
+                });
+                return false;
+            }
+        }else{
+            if($.trim(password)) {
+                if (prexRule(/^[a-z0-9_-]{6,18}$/, password, '密码只能是6-18位之间的数字、字母、下划线') == false) {
+                    return false;
+                }
+                if (!password || $.trim(password) != $.trim(password_c)) {
+                    layer.msg('两次输入的密码不一致', {icon: 5, time: 2000}, function (index) {
+                        layer.close(index);
+                    });
+                    return false;
+                }
+            }
+        }
+        $("#btnForm").submit()
+    });
+
+    //IOS开关样式配置
+    var elem = document.querySelector('.js-switch');
+    var switchery = new Switchery(elem, {
+        color: '#1AB394'
+    });
+    var config = {
+        '.chosen-select': {},
+    };
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    };
+</script>
+</body>
+</html>

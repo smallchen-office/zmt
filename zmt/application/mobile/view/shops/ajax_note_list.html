@@ -1,0 +1,65 @@
+<style type="text/css">
+    .page-shopping .bottom-panel{display: flex;}
+    .page-shopping .bottom-panel .info{margin-top: 4px;width: 50%;}
+    .page-shopping .bottom-panel .right{margin-top: 10px;}
+    .page-shopping .item-list .attr span{overflow: hidden;display: -webkit-box; font-weight: normal; white-space: nowrap;}
+</style>
+{empty name="cartList" value=""}
+{else/}
+{foreach $cartList as $k=>$v}
+<div  class="block" style="margin-top:0px;">
+	<a href="{:url('mobile/myshop/noteHandle',['ids'=>$v.id,'type'=>2,'cate_id'=>$cate_id])}">
+		<div class="item-list">
+			<div class="item">
+				<div class="inner">
+					<div style="width:60%; float:left; height:98px;">
+						<div  class="pic">
+							<img src="{$v.head_img}">
+						</div>
+						<div class="name">
+							<span>  {$v.title} </span>
+						</div>
+						<div class="attr">
+							<span>{$v.name}-{$v.name2}</span>
+						</div>
+						<div class="attr">
+							<span>{:getSubstr($v.abstract,0,10)}</span>
+						</div>
+					</div>
+					<div style=" position:absolute; right:0px; top:20px; width:100px; height:98px;">
+						{eq name="$v['status']" value="-2"}等待审核{/eq}
+						{eq name="$v['status']" value="-1"}审核未通过{/eq}
+						{eq name="$v['status']" value="0"}禁用{/eq}
+						{eq name="$v['status']" value="1"}正常{/eq}
+					</div>
+					<div style="height:0px; line-height:0px; clear:both;"></div>
+				</div>
+				<div class="append"></div>
+			</div>
+		</div>
+	</a>
+</div>
+<form id="selcartValidate">
+    {:token()}
+</form>
+{/foreach}
+{/empty}
+{empty name="cartList" value=""}
+<div class="screen-wrap fullscreen login">
+    <section id="cart-content">
+        <div class="qb_tac" style="padding:50px 0">
+            <br>还没有创建文章...
+		</div>
+        <div class="qb_gap" style="width:60%; margin:0 auto;">
+            <a href="{:url('mobile/myshop/noteHandle',['ids'=>0,'type'=>2,'cate_id'=>$cate_id])}" class="mod_btn btn_strong">点击创建</a>
+        </div>
+    </section>
+    <div style="height:72px;"></div>
+    <section class="f_mask" style="display: none;"></section>
+    <section class="f_block" id="choose" style="height:0px;"></section>
+</div>
+{else/}
+<div class="bottom-panel">
+    <a class="btn_big1" href="{:url('mobile/myshop/noteHandle',['ids'=>0,'type'=>2,'cate_id'=>$cate_id])}" style="background-color:#87CEEB;color:white;text-align:center;">创建</a>
+</div>
+{/empty}

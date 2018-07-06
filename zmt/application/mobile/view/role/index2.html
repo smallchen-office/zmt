@@ -1,0 +1,58 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="TPshop1.2" />
+    <meta charset="urlTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>个人中心-{$Think.config.web_site_title}</title>
+    {include file="public/head" /}
+</head>
+<body>
+{include file="public/top" /}
+<div id="tbh5v0">
+    <div class="Wallet">
+		{foreach cate_list as $v}
+			<em class="glyphicon"></em>
+			{eq name="$v.is_use" value="0"}
+				<a href="javascript:postAuth({$type},{$v['id']});">
+					<dl class="b" style="color:#D3D3D3;">
+						<dt style="color:#D3D3D3;"> {:str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$v.deep*1)}{$v.name}</dt>
+						<dd style="color:#D3D3D3;">申请权限</dd>					
+					</dl>
+				</a>
+			{else}
+				<a href="#">
+					<dl class="b">
+						<dt>{:str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$v.deep*1)}{$v.name}</dt>
+										
+					</dl>
+				</a>
+			{/eq}
+		{/foreach}
+    </div>
+	<div style="height:50px"></div>
+</div>
+{include file="public/footer_nav" /}
+<script type="text/javascript">
+function postAuth(type,cate){
+	$.ajax({
+		type: 'post',
+		url: "{:url('mobile/role/postauth')}",
+		data: {type:type,cate:cate}, 
+		success: function(data) {
+			if(data.code ==1){
+				layer.open({content:data.msg,time: 1});
+			}else{
+				layer.open({content:data.msg,time: 1});
+				return false;
+			}
+		},
+		error:function(){
+			layer.open({content:'网络错误,请稍后再试',time: 1});
+			return false;
+		}
+	});
+}
+</script>
+</body>
+</html>

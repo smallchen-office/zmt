@@ -1,0 +1,18 @@
+{foreach $goods_list as $k=>$vo}
+	<li>
+		<a href="{:url('mobile/Goods/goodsInfo',array('id'=>$vo.id))}" class="item">
+			<div class="pic_box">
+				<div class="active_box">
+					<span style=" background-position:0px -36px">新品</span>
+				</div>
+				<img src="{$vo.img}">
+			</div>
+			<div class="title_box">{$vo.title}</div>
+			<div class="price_box">
+				<span class="new_price"><i>￥{$vo.sale_money}元</i></span>
+				<div class="comment_box">已售{$vo.sale_sum}</div>
+			</div>
+			
+		</a>
+	</li>
+{/foreach}

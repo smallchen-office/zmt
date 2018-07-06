@@ -1,0 +1,64 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="TPshop v1.1" />
+    <meta charset="urlTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>专家文章-{$Think.config.web_site_title}</title>
+    {include file="public/head" /}
+    <link rel="stylesheet" type="text/css" href="/static/mobile/css/index.css"/>
+    <script type="text/javascript" src="/static/mobile/js/TouchSlide.1.1.js"></script>
+
+</head>
+<body>
+<div id="page" class="showpage">
+    <div>
+        <!--首页banner广告轮播980*400开始-->
+        <div id="scrollimg" class="scrollimg">
+            <div class="bd">
+                <ul>
+                    {zhjaa:adv pid="1" limit="4" item="mm"}
+						<li><a href="{$mm.link}" {eq name="mm.is_target" value="1"}target="_blank"{/eq}> <img src="{$mm.images}" title="" width="100%"/></a></li>
+                    {/zhjaa:adv}
+                </ul>
+            </div>
+            <div class="hd">
+                <ul></ul>
+            </div>
+        </div>
+        <script type="text/javascript">
+            TouchSlide({
+                slideCell:"#scrollimg",
+                titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+                mainCell:".bd ul",
+                effect:"leftLoop",
+                autoPage:true,//自动分页
+                autoPlay:true //自动播放
+            });
+        </script>
+        <!--首页banner广告轮播980*400结束-->
+
+        <div>
+			<div style="height:20px;">
+				
+			</div>
+			<ul>
+				{foreach $list as $v}
+				<li class="note_list">
+						<img src="\static\mobile\images\专家文章.png"/>
+						<a href="{eq name='$v.link' value=''}{:url('mobile/notes/noteinfo',['id'=>$v.id])}{else}{$v.link}{/eq}" style="font-size:14px;margin-top:2px;">{:handleStr($v.title,0,16)}</a>
+						<span style="color:#C0C0C0;font-size:10px;">{$v.name}</span>
+					</li>
+				{/foreach}
+			</ul>
+		</div>
+
+		<div style="height:50px"></div>
+    </div>
+    <div id="J_demo" style="display:none"></div>
+
+</div>
+
+{include file="public/footer_nav" /}
+</body>
+</html>

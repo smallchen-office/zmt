@@ -1,0 +1,342 @@
+{include file="public/header" /}
+<style type="text/css">
+    .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th { border: 1px solid #e7e7e7; } #imgPicker div:first-child{ position: absolute;  width: 85px; height: 40px; } .goods_xc{ width: 100px; text-align:center; margin: 5px; display:inline-block; }
+</style>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>商品管理</h5>
+                    <div class="ibox-tools">
+                        <div class="ibox-tools">
+                            <a href="javascript:history.go(-1)"  title="返回">
+                                <i class="fa fa-reply"> 返回</i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <form  method="post" action="{:url('goodsHandle',['id'=>$id])}" id="btnForm">
+                    <div class="ibox-content">
+                        <!--<div class="clients-list">-->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#tab-basic"><i class="fa fa-book"></i> 通用信息</a></li>
+                            <li ><a data-toggle="tab" href="#tab-img"><i class="fa fa-photo"></i> 商品相册</a></li>
+                        </ul>
+                        <div class="tab-content" >
+                            <!--通用信息    start-->
+                            <div id="tab-basic" class="tab-pane active" >
+                                <div class="hr-line-dashed"></div>
+                                <div class="full-height-scroll">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <tbody>
+											<tr>
+                                                <td>所属店铺：</td>
+                                                <td>
+                                                    <div class="col-md-3">
+                                                        <select class="form-control m-b chosen-select " name="shop_id">
+                                                            <option value="">请选择分类</option>
+                                                            {foreach $shop_list as $k=>$v}
+																<option value="{$k}" {eq name="$info['shop_id']" value="$k"}selected{/eq}>{$v}</option>
+                                                            {/foreach}
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+											<tr>
+                                                <td>商品分类：</td>
+                                                <td>
+                                                    <div class="col-md-3">
+                                                        <select class="form-control m-b chosen-select " onchange="getGoodsList(this);" >
+                                                            <option value="">请选择分类</option>
+                                                            {foreach $cate_list as $k=>$v}
+																<option value="{$v.id}" {eq name="info.cate_id" value="$v.id"}selected{/eq}>{:str_repeat('— ',$v.deep*1)}{$v.name}</option>
+                                                            {/foreach}
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%">商品名称：</td>
+                                                <td>
+                                                    <div class=" col-sm-4">
+                                                        <select class="form-control m-b" width="100%" name="goods_id" id="goods_id">
+															<option value="">请选择对应商品</option>
+															{foreach $goods_list as $k=>$v}
+																<option value="{$v['id']}" {eq name="$v['id']" value="$info.goods_id"} selected {/eq} >{$v['name']}</option>
+															{/foreach}
+														</select>
+                                                    </div>
+													
+                                                </td>
+                                            </tr>
+											<tr>
+                                                <td width="20%">标题：</td>
+                                                <td>
+                                                    <div class=" col-sm-2">
+                                                        <input type="text" class="form-control" name="title"  value="{$info.title}" placeholder="标题">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%">商品图片：</td>
+                                                <td>
+                                                    <div class=" col-sm-4">
+                                                        <a  class="btn btn-info" href="javascript:void(0);" style="float: left" uploader="img" data-url="{:url('Uploadify/jqUpload')}" data-path="goods" >+ 浏览文件
+                                                            <input type="hidden" name="img" id="img" value="{$info.img}">
+                                                        </a>
+                                                        <img  id="img_img" style="float:left;margin-left: 120px;margin-top:10px; max-width: 300px;max-height: 300px"  onerror="this.src='/static/admin/images/no_img.jpg'" src="{$info.img}"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+											<tr>
+                                                <td width="20%"><b>商品规格：</b></td>
+                                                <td>
+                                                    <div class="col-md-3">
+                                                        <select class="form-control m-b" name="spec_id">
+                                                            <option value="">请选择商品规格</option>
+                                                            {foreach $spec_list as $k=>$v}
+																<option value="{$k}" {eq name="k" value="$info.spec_id"}selected{/eq}>{$v}</option>
+                                                            {/foreach}
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+											<tr>
+                                                <td width="20%">规格值：</td>
+                                                <td>
+                                                    <div class=" col-sm-2">
+                                                        <input type="text" class="form-control" name="spec_value"  value="{$info.spec_value}" placeholder="规格值">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%">售价：</td>
+                                                <td>
+                                                    <div class=" col-sm-2">
+                                                        <input type="number" class="form-control" name="sale_money"  value="{$info.sale_money}" placeholder="售价" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" >
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%">特价：</td>
+                                                <td>
+                                                    <div class=" col-sm-2">
+                                                        <input type="number" class="form-control" name="special_money"  value="{$info.special_money}" placeholder="特价" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" >
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%">库存数量：</td>
+                                                <td>
+                                                    <div class=" col-sm-2">
+                                                        <input type="number" class="form-control" name="stock"  value="{$info.stock}" placeholder="库存数量" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" >
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>是否显示：</td>
+                                                <td>
+                                                    <div class=" col-sm-4">
+                                                        <div class="radio i-checks">
+                                                            <input type="radio" name='is_show' value="1" checked />是&nbsp;&nbsp;
+                                                            <input type="radio" name='is_show' value="0" {eq name="$info['is_show']" value="0"} checked {/eq}/>否
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%">详细描述：</td>
+                                                <td>
+                                                    <div class=" col-sm-8">
+                                                        <!--<textarea class="span12 ckeditor" id="detail" name="detail" title="" style="height:800px;max-height:1000px;">{$info.detail}</textarea>-->
+                                                        <div class="span12 ckeditor" id="detail" title="" style="height:800px;max-height:1000px;">{$info.detail}</div>
+                                                    </div>
+                                                    <input type="hidden" name="detail" value="">
+                                                </td>
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--通用信息    end-->
+
+                            <!--商品相册    start-->
+                            <div id="tab-img" class="tab-pane ">
+                                <div class="hr-line-dashed"></div>
+                                <div class="full-height-scroll">
+                                    <div class="table-responsive">
+                                        <table class="table  ">
+                                            <tbody>
+                                            <tr>
+                                                <td  id="imgs" >
+                                                    {empty name="images" value=""}
+                                                    <div  id="rming">还没有图片,快去上传吧</div>
+                                                    {else/}
+                                                    {foreach $images as $v}
+                                                    <div class="goods_xc">
+                                                        <input type="hidden" value="{$v}" name="images[]">
+                                                        <a href="{$v}" target="_blank"><img width="100" height="100" src="{$v}"></a>
+                                                        <span class="help-block m-b-none" style="margin-bottom: 1%"> <a href="javascript:void(0)" onclick="delImg(this,'{$v}',1)">删除</a></span>
+                                                    </div>
+                                                    {/foreach}
+                                                    {/empty}
+
+                                                </td>
+                                            </tr>
+                                            <tr >
+                                                <td height="20px">
+                                                        <div id="imgPicker"  style="float:left;position: absolute">添加图片</div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--商品相册    end-->
+
+                            <div class="form-group" >
+                                <div class="col-sm-4 col-sm-offset-3">
+                                    <a class="btn btn-primary" id="saveBtn"><i class="fa fa-save"></i> 保存</a>&nbsp;&nbsp;&nbsp;
+                                    <a class="btn btn-danger" href="javascript:history.go(-1);"><i class="fa fa-close"></i> 返回</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!--</div>-->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{include file="public/footer" /}
+
+<script type="text/javascript">
+    /*表单提交*/
+    $("#saveBtn").click(function() {
+        //通用信息
+        var sale_money = $("input[name=sale_money]").val();//商品名称
+        var detail = editor.$txt.html();//商品详细信息
+        $("input[name=detail]").val(filterXSS(detail));//过滤xss攻击
+
+        if (isEmpty('', goods_id, '请输入售价') == false) {
+            return false;
+        }
+
+        ajaxFormBtn("{:url('goodsHandle',['id'=>$id])}", 'btnForm');
+    });
+	function getGoodsList(obj){
+        var pid = $(obj).val();
+        $("#goods_id").empty().html('<option value="">请选择</option>');
+        $.ajax({
+            type: "POST",
+            url: "/home/Api/getGoods/cate_id/"+pid,
+            success: function(data){
+                var res = '<option value="">请选择</option>'+ data;
+				$("#goods_id").empty().html(res);
+            },
+            error:function(){
+                layer.open({content:'网络错误,请稍后再试',time: 100});
+                return false;
+            }
+        });
+    };
+    //上传图片,初始化WebUploader
+        var uploader = WebUploader.create({
+            auto: true,// 选完文件后，是否自动上传。
+            swf: '/static/admin/webupload/Uploader.swf',// swf文件路径
+            server: "{:url('Uploadify/webUpload')}",// 文件接收服务端。
+            duplicate :false,// 重复上传图片，true为可重复false为不可重复
+            pick: '#imgPicker',// 选择文件的按钮。可选。
+
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/jpg,image/jpeg,image/png'
+            },
+            'onUploadSuccess': function(myfile, data, response) {
+                var htmls = '<div class="goods_xc "> ' +
+                        '<input type="hidden" value="'+data._raw+'" name="images[]">' +
+                        '<a href="'+data._raw+'" target="_blank"><img width="100" height="100" src="'+data._raw+'"></a> ' +
+                        '<span class="help-block m-b-none" style="margin-bottom: 1%"> <a href="javascript:void(0)" onclick="delImg(this,11,2)" data-path="'+data._raw+'">删除</a></span>' +
+                        ' </div>';
+//                var img_num = $(".goods_xc").length;//当前商品有几张图片
+                $("#rming").remove();
+                $("#imgs").append(htmls);
+//                console.log(img_num);
+            }
+        });
+    /**
+     * 删除图片
+     *@param path 上传路径
+     *@param type 存在则为已经存在数据库
+     */
+    function delImg(obj,path,type){
+
+        if(type == 2){ //未入库
+           var p = $(obj).attr('data-path');
+            $.post("{:url('uploadify/delImg')}",{path:p},function(){
+            });
+        }
+        $(obj).parent().parent().remove();
+
+    };
+	var config = {
+		'.chosen-select': {},
+	}
+	for (var selector in config) {
+		$(selector).chosen(config[selector]);
+	}
+</script>
+</body>
+</html>
+<!--以下是在线编辑器 代码 -->
+<link rel="stylesheet" type="text/css" href="/static/admin/wangeditor/css/wangEditor.min.css">
+<!--//防xss攻击js-->
+<script src="/static/admin/js/xss.js"></script>
+
+<!--引入jquery和wangEditor.js-->   <!--注意：javascript必须放在body最后，否则可能会出现问题-->
+<script type="text/javascript" src="/static/admin/wangeditor/js/wangEditor.min.js"></script>
+
+<!--这里引用jquery和wangEditor.js-->
+<script type="text/javascript">
+    var editor = new wangEditor('detail');
+    // 配置自定义表情
+    editor.config.emotions = {
+        'default': {
+            title: '常用',  // 组名称
+            data: '/static/admin/wangeditor/js/emotions.data'
+        },
+        /* 第二组，id叫做'weibo'*/
+        'weibo': { title: '微博表情', /* 组名称*/ data: [/* data 还可以直接赋值为一个表情包数组*/ {icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/7a/shenshou_thumb.gif', value: '[草泥马]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/60/horse2_thumb.gif', value: '[神马]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/fuyun_thumb.gif', value: '[浮云]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c9/geili_thumb.gif', value: '[给力]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/f2/wg_thumb.gif', value: '[围观]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/70/vw_thumb.gif', value: '[威武]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6e/panda_thumb.gif', value: '[熊猫]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/81/rabbit_thumb.gif', value: '[兔子]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/otm_thumb.gif', value: '[奥特曼]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/15/j_thumb.gif', value: '[囧]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/89/hufen_thumb.gif', value: '[互粉]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c4/liwu_thumb.gif', value: '[礼物]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/ac/smilea_thumb.gif', value: '[呵呵]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/0b/tootha_thumb.gif', value: '[哈哈]'}]}
+    };
+    editor.config.pasteFilter = false;// 粘贴过滤
+    // 只粘贴纯文本
+    // （注意，如果你在上面设置了 editor.config.pasteFilter = false 那么这个粘贴纯文本的设置将失效）
+    editor.config.pasteText = false;
+
+    // 上传图片
+    editor.config.uploadImgUrl = "{:url('Uploadify/editUpload')}";
+    editor.config.uploadImgFileName = 'myfile'// 配置上传文件名
+
+    // 配置自定义参数
+    editor.config.uploadParams = {
+        path:'goods'
+    };
+    // 设置 headers
+    editor.config.uploadHeaders = {
+        'Accept' : 'text/x-json'
+    };
+    // 隐藏掉插入网络图片功能。该配置，只有在你正确配置了图片上传功能之后才可用。
+    editor.config.hideLinkImg = false;
+    editor.create();
+
+</script>
+<!--以上是在线编辑器 代码  end-->

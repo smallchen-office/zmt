@@ -1,0 +1,65 @@
+{include file="public/header" /}
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>基础资料·规格管理</h5>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <a href="{:url('specHandle',['id'=>0])}" class="btn btn-primary "><i class="fa fa-plus"></i> 添加规格</a>
+                                <a href="javascript:void(0)" class="btn btn-danger " onclick="getIds(this)" data-url="{:url('delSpec')}"><i class="fa fa-trash-o"></i> 批量删除</a>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="table-responsive ">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th width="5%"><input class="i-checks checkbox check-all" type="checkbox" >ID</th>
+                                    <th>名称</th>
+                                    <th width="15%">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {empty name="lists"}
+									<tr><td colspan="20" style="padding-top:10px;padding-bottom:10px;font-size:16px;text-align:center">暂无数据</td></tr>
+								{else/}
+									{foreach $lists as $v}
+										<tr>
+											<td>
+												<input class="ids i-checks"  type="checkbox" name="ids[]" value="{$v.id}">{$v.id}
+											</td>
+											<td>{$v.name}</td>
+											<td>
+												<a href="{:url('specHandle',['id'=>$v.id])}" title="编辑"><span class="glyphicon glyphicon-edit"></span>&nbsp;编辑</a>&nbsp;&nbsp;
+												<a onclick="delBtn(this)" data-id="{$v.id}" data-name="{$v.name}" data-url="{:url('delSpec')}"><span class="glyphicon glyphicon-trash"></span>&nbsp;删除</a>&nbsp;&nbsp;
+											</td>
+										</tr>
+									{/foreach}
+                                {/empty}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/footer" /}
+<link href="__CSS__/plugins/iCheck/custom.css" rel="stylesheet">
+
+<script type="text/javascript">
+    //全选的实现
+    $('.check-all').on('ifChecked', function (event) {
+        $('input[name="ids[]"]').iCheck('check');
+    });
+    $('.check-all').on('ifUnchecked', function (event) {
+        $('input[name="ids[]"]').iCheck('uncheck');
+    });
+</script>
+</body>

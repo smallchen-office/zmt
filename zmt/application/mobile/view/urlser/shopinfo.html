@@ -1,0 +1,227 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="TPshop1.2" />
+    <meta charset="urlTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>店铺管理-{$Think.config.web_site_title}</title>
+    
+   
+<link href="/static/admin/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+ <link rel="stylesheet" href="/static/mobile/css/user.css">
+ {include file="public/head" /}
+ <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak={$Think.config.baidu_map_api}"></script>
+</head>
+<body>
+<header>
+    <div class="tab_nav">
+        <div class="header">
+            <div class="h-left"><a class="sb-back" href="javascript:history.back(-1)" title="返回"></a></div>
+            <div class="h-mid">店铺管理</div>
+        </div>
+    </div>
+</header>
+{include file="public/right_menu" /}
+<div id="tbh5v0">
+    <div class="addressmone">
+        <form  onSubmit="return false" id="btnForm">
+            <ul>
+			<li>
+                <span>店铺名称</span>
+                <input name="name" type="text" placeholder="店铺名称" value="{$info.name}"/>
+            </li>
+			<li>
+                <span>注册分类</span>
+                <select class="chosen-select" width="100%" name="cate_id" >
+					<option value="0">请选择注册分组</option>
+					{foreach $cate_list as $k=>$v}
+						<option value="{$k}" {eq name="$k" value="$info.cate_id"}selected {/eq}>{$v}</option>
+					{/foreach}
+				</select>
+            </li>
+			<li>
+                <span>注册账号</span>
+                <input type="text" maxlength="12" placeholder="注册账号" value="{$info.username}" readonly />
+            </li>
+			<li style="height:10px"></li>
+            <li>
+                <span>联系人姓名</span>
+                <input name="author" type="text" maxlength="12" placeholder="联系人姓名" value="{$info.author}"/>
+            </li>
+            <li>
+                <span>地区</span>
+                <select class="province_select"  name="province_id" onchange="getCity(this)">
+                    <option value="">请选择省份</option>
+                   {foreach $province as $k=>$v}
+                        <option  value="{$v.id}" {eq name="$k" value="$info.province_id"}selected {/eq}>{$v.name}</option>
+                    {/foreach}
+                </select>
+                <select name="city_id" id="city" onChange="getArea(this)">
+                    <option  value="">请选择城市</option>
+					{foreach $city as $k=>$v}
+                        <option  value="{$v.id}" {eq name="$k" value="$info.city_id"}selected {/eq}>{$v.name}</option>
+                    {/foreach}
+                </select>
+                <select name="area_id" id="district" onChange="getTown(this)">
+                    <option  value="">请选择区域</option>
+					{foreach $area as $k=>$v}
+                        <option  value="{$v.id}" {eq name="$k" value="$info.area_id"}selected {/eq}>{$v.name}</option>
+                    {/foreach}
+                </select>
+            </li>
+            <li>
+                <span>详细地址</span> <input type="text"  name="address"  placeholder="详细地址" maxlength="100" value="{$info.address}"/>
+            </li>
+            <li>
+                <span>手机</span>
+                <input type="text" name="telephone" maxlength="15" placeholder="手机号码" value="{$info.telephone}"/>
+            </li>
+			<li>
+				<span>店铺地图</span>
+				<div id="allmap" style="height:200px;"></div>
+				<input  type="hidden" name="map" value="{$info.map}" id="maps">
+				<script type="text/javascript">
+					// 百度地图API功能
+					var map = new BMap.Map("allmap");    // 创建Map实例
+					var point = new BMap.Point({$info.map});
+					map.centerAndZoom(point, 15);
+
+					map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+					
+					function showInfo(e){
+						map.clearOverlays(); 
+						$("#maps").val(e.point.lng + ", " + e.point.lat);
+
+						var mk = new BMap.Marker(e.point);
+						map.addOverlay(mk);               // 将标注添加到地图中
+						marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+					}
+					map.addEventListener("click", showInfo);
+					
+					
+					var mk = new BMap.Marker(point);
+					map.addOverlay(mk);               // 将标注添加到地图中
+					marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+				</script>
+			</li>
+			<li>
+                <span>注册简介</span></br>
+				<div>
+					<textarea class="span12 ckeditor" id="content"  name="content" title="" style="height:300px">{$info.content}</textarea>
+				</div>
+            </li>
+            </ul>
+            <div style=" height:30px"></div>
+            <div class="field submit-btn">
+					<input type="submit" class="btn_big1" value="提交保存" id="saveBtn" style="background:#4169E1"/>
+				</div>
+            {:token()}
+        </form>
+    </div>
+</div>
+<script src="/static/admin/js/jquery.min.js?v=2.1.4"></script>
+<script src="/static/admin/js/bootstrap.min.js?v=3.3.6"></script>
+<script type="text/javascript">
+    /*表单提交*/
+    $("#saveBtn").click(function(){
+        var name = $("input[name=author]").val();
+        var province_id = $("select[name=province_id]").val();
+        var city_id = $("select[name=city_id]").val();
+        var area_id = $("select[name=area_id]").val();
+        var address = $("input[name=address]").val();
+        var mobile =$("input[name=mobile]").val();
+
+        if( name == ''){
+            layer.open({content:'联系人不能为空',time: 1});
+            return false;
+        }
+        if(province_id == ''){
+            layer.open({content:'请选择省份',time: 1});
+            return false;
+        }
+        if(city_id ==''){
+            layer.open({content:'请选择城市',time: 1});
+            return false;
+        }
+        if(area_id == ''){
+            layer.open({content:'请选择区域',time: 1});
+            return false;
+        }
+        if(address == ''){
+            layer.open({content:'详细地址不能为空',time: 1});
+            return false;
+        }
+        mobileAjaxFormBtn("{:url('mobile/Urlser/shopinfo')}",'btnForm');
+    });
+</script>
+</body>
+</html>
+
+<!--以下是在线编辑器 代码 -->
+<link rel="stylesheet" type="text/css" href="/static/admin/wangeditor/css/wangEditor.min.css">
+<!--//防xss攻击js-->
+<script src="/static/admin/js/xss.js"></script>
+
+<!--引入jquery和wangEditor.js-->   <!--注意：javascript必须放在body最后，否则可能会出现问题-->
+<script type="text/javascript" src="/static/admin/wangeditor/js/wangEditor.min.js"></script>
+
+<!--这里引用jquery和wangEditor.js-->
+<script type="text/javascript">
+    var editor = new wangEditor('content');
+    // 自定义菜单配置
+    editor.config.menus = [
+        'bold',
+        'underline',
+        'italic',
+        'forecolor',
+        'fontfamily',
+        'fontsize',
+        'unorderlist',
+        'orderlist',
+        'alignleft',
+        'aligncenter',
+        'alignright',
+        'link',
+        'unlink',
+        'table',
+        'emotion',
+        'img',
+        'video',
+        'location',
+        'undo',
+        'redo',
+        'fullscreen'
+    ];
+    // 配置自定义表情
+    editor.config.emotions = {
+        'default': {
+            title: '常用',  // 组名称
+            data: '/static/admin/wangeditor/js/emotions.data'
+        },
+        /* 第二组，id叫做'weibo'*/
+        'weibo': { title: '微博表情', /* 组名称*/ data: [/* data 还可以直接赋值为一个表情包数组*/ {icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/7a/shenshou_thumb.gif', value: '[草泥马]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/60/horse2_thumb.gif', value: '[神马]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/fuyun_thumb.gif', value: '[浮云]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c9/geili_thumb.gif', value: '[给力]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/f2/wg_thumb.gif', value: '[围观]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/70/vw_thumb.gif', value: '[威武]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6e/panda_thumb.gif', value: '[熊猫]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/81/rabbit_thumb.gif', value: '[兔子]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/otm_thumb.gif', value: '[奥特曼]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/15/j_thumb.gif', value: '[囧]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/89/hufen_thumb.gif', value: '[互粉]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c4/liwu_thumb.gif', value: '[礼物]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/ac/smilea_thumb.gif', value: '[呵呵]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/0b/tootha_thumb.gif', value: '[哈哈]'}]}
+    };
+    editor.config.pasteFilter = false;// 粘贴过滤
+    // 只粘贴纯文本
+    // （注意，如果你在上面设置了 editor.config.pasteFilter = false 那么这个粘贴纯文本的设置将失效）
+    editor.config.pasteText = false;
+
+    // 上传图片
+    editor.config.uploadImgUrl = "{:url('Uploadify/editUpload')}";
+    editor.config.uploadImgFileName = 'myfile'// 配置上传文件名
+
+    // 配置自定义参数
+    editor.config.uploadParams = {
+        path:'shop'
+    };
+    // 设置 headers
+    editor.config.uploadHeaders = {
+        'Accept' : 'text/x-json'
+    };
+    // 隐藏掉插入网络图片功能。该配置，只有在你正确配置了图片上传功能之后才可用。
+    editor.config.hideLinkImg = false;
+    editor.create();
+
+</script>
+<!--以上是在线编辑器 代码  end-->

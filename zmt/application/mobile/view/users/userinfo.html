@@ -1,0 +1,64 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="TPshop1.2" />
+    <meta charset="urlTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>编辑地址-{$Think.config.web_site_title}</title>
+    
+   
+<link href="/static/admin/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+ <link rel="stylesheet" href="/static/mobile/css/user.css">
+ {include file="public/head" /}
+</head>
+<body>
+<header>
+    <div class="tab_nav">
+        <div class="header">
+            <div class="h-left"><a class="sb-back" href="javascript:history.back(-1)" title="返回"></a></div>
+            <div class="h-mid">设置</div>
+        </div>
+    </div>
+</header>
+{include file="public/right_menu" /}
+<div id="tbh5v0">
+    <div class="addressmone">
+        <form  onSubmit="return false" id="btnForm">
+            <ul>
+			<li>
+                <span>登录名称</span>
+                <input type="text" placeholder="登录名称" readonly  value="{$info.username}"/>
+            </li>
+			<li>
+                <span>登录密码</span>
+                <input name="password" type="password" maxlength="12" placeholder="不填写代表不修改"/>
+            </li>
+            <li>
+                <span>联系人</span>
+                <input name="realname" type="text" maxlength="12" placeholder="联系人姓名" value="{$info.realname}"/>
+            </li>
+            <li>
+                <span>手机</span>
+                <input type="text" name="telephone" maxlength="15" placeholder="手机号码" value="{$info.telephone}"/>
+            </li>
+            </ul>
+            <div style=" height:30px"></div>
+            <div class="field submit-btn">
+					<input type="submit" class="btn_big1" value="提交保存" id="saveBtn" style="background:#7B68EE"/>
+				</div>
+            {:token()}
+        </form>
+    </div>
+</div>
+<script src="/static/admin/js/jquery.min.js?v=2.1.4"></script>
+<script src="/static/admin/js/bootstrap.min.js?v=3.3.6"></script>
+<script type="text/javascript">
+    /*表单提交*/
+    $("#saveBtn").click(function(){
+        var name = $("input[name=author]").val();
+        var mobile =$("input[name=telephone]").val();
+        mobileAjaxFormBtn("{:url('mobile/users/userinfo',['id'=>$id])}",'btnForm');
+    });
+</script>
+</body>
+</html>
