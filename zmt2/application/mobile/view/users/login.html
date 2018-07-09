@@ -1,0 +1,58 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta name="Generator" content="TPshop1.2" />
+<meta charset="urlTF-8">
+<meta name="viewport" content="width=device-width">
+<title>登录-{$Think.config.web_site_title}</title>
+    {include file="public/head" /}
+    <link rel="stylesheet" type="text/css" href="/static/mobile/css/login.css"/>
+</head>
+<body>
+  <header id="header" class='header'>
+    <div class="h-left"><a href="javascript:history.back(-1)" class="sb-back"></a></div>
+	<div class="h-mid">会员登录     </div>
+ </header>
+  	<div class="denglu">
+		<form action="" method="post" id="login_form">        	
+            <div class="Login">
+				<dl>
+	            <dt>用户名：</dt>
+			    	<dd><input type="text" name="username" id="username" placeholder="请输入账号/手机号" value="" /></dd>
+				</dl>
+                <dl style=" margin-top:15px;">
+                <dt>密码：</dt>
+					<dd><input type="password" name="password" id="password" placeholder="密码"/></dd>
+	            </dl>
+				<div class="field submit-btn">
+					<input type="button" class="btn_big1" onClick="checkSubmit()" value="登 录" id="loginBtn"/>
+				</div>
+            <div class="ng-foot">
+              <div class="ng-link-area" >
+				{if($Think.config.user_allow_register)}
+					<span style=" margin-right:5px; border-right:1px solid #eeeeee">
+					  <a href="{:url('urlser/reg')}" >立即入驻</a>
+					</span>
+				{/if}
+                 <span class="user_line"></span>
+                   <span >
+                  <a href="javascript:alert('请联系管理员！');" >忘记密码？</a>
+                </span>
+              </div>
+            </div>			
+          </div>
+		</form>
+	</div>
+<script type="text/javascript">
+	document.onkeydown=function(event){
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        if(e && e.keyCode==13){ // enter 键
+            $('#loginBtn').click();
+        }
+    };
+	function checkSubmit(){
+		mobileAjaxFormBtn("{:url('mobile/users/login')}",'login_form');
+	}
+</script>	
+</body>
+</html>

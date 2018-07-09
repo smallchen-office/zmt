@@ -1,0 +1,59 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="TPshop1.2" />
+    <meta charset="urlTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>数据分析-{$Think.config.web_site_title}</title>
+	 {include file="public/head" /}
+	 
+	 <link href="/static/admin/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+</head>
+<body style="margin:0 auto;">
+<div>
+    <div>
+		<div style="height:20px;"></div>
+		<div class="col-md-1"></div>
+		<!-- <div class="col-md-10" style="margin-left: -20px;"> -->
+			<!-- <select class="form-control m-b chosen-select" name="category_id" > -->
+				<!-- <option value="">所有分类</option> -->
+				<!-- {foreach $goods_list as $k=>$v} -->
+				<!-- <option value="{$v.id}">{$v.title}</option> -->
+				<!-- {/foreach} -->
+			<!-- </select> -->
+		<!-- </div> -->
+        <table class="table table-bordered table-condensed table-hover" style="margin-top:10px;">
+			<thead style="border:1px">
+				<th>时间</th>
+				<th>商品</th>
+				<th>变化数量</th>
+				<th>损益</th>
+				<th>备注</th>
+			</thead>
+			<tbody>
+				{foreach result as $k=>$v}
+					<tr class="{if $v.num1>0}info{else}danger{/if}">
+						<td>{$v.create_at}</td>
+						<td>{$v.goods_name}</td>
+						<td>{$v.num1}</td>
+						<td>{$v.num1*$v.per_money}元</td>
+						<td>{$v.detail}</td>
+					</tr>
+				{/foreach}
+			</tbody>
+		</table>
+    </div>
+</div>
+<script src="/static/admin/js/jquery.min.js?v=2.1.4"></script>
+<script src="/static/admin/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="/static/admin/js/jquery.easyui.min.js"></script>
+<script>
+	var config = {
+        '.chosen-select': {},
+    }
+    for (var selector in config) {
+        $(selector).chosen(config[selector]);
+    }
+</script>
+</body>
+</html>

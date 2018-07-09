@@ -1,0 +1,167 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="TPshop1.2" />
+    <meta charset="urlTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>文章管理-{$Think.config.web_site_title}</title>
+        <link href="/static/admin/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	 {include file="public/head" /}
+	 <link rel="stylesheet" href="/static/mobile/css/user.css">
+	<style type="text/css">
+		#imgPicker div:first-child{ position: absolute;  width: 120px; height: 40px; } 
+		.goods_xc{ width: 100px; text-align:center; margin: 5px; display:inline-block; }
+	</style>
+</head>
+<body>
+<header>
+    <div class="tab_nav">
+        <div class="header">
+            <div class="h-left"><a class="sb-back" href="javascript:history.back(-1)" title="返回"></a></div>
+            <div class="h-mid">文章管理</div>
+        </div>
+    </div>
+</header>
+{include file="public/right_menu" /}
+<div id="tbh5v0">
+    <div class="addressmone">
+        <form  onSubmit="return false" id="btnForm">
+            <ul>
+			<li>
+				<span>文章分类</span>
+                <select class="chosen-select" width="80%" name="pid">
+					<option value="0">请选择</option>
+					{foreach $note_cate as $k=>$v}
+						<option value="{$k}" {eq name="$k" value="$info['pid']"} selected {/eq}>{$v}</option>
+					{/foreach}
+				</select>
+			</li>
+			<li>
+                <span>文章标题</span>
+                <input name="title" type="text" placeholder="文章标题" value="{$info.title}"/>
+            </li>
+			<li style="height:100px">
+				<span>封面图片：</span>
+				<a  class="btn btn-info" href="javascript:void(0);" style="float: left;margin-top:20px;" uploader="head_img" data-url="{:url('Uploadify/jqUpload')}" data-path="note" >+ 浏览文件
+					<input type="hidden" name="head_img" id="head_img" value="{$info.head_img}">
+				</a>
+				<img  height="100px" id="head_img_img" style="float:left;margin-left: 120px;" onerror="this.src='/static/admin/images/no_img.jpg'" src="{$info.head_img}"/>
+			</li>
+			<li>
+                <span>摘要</span>
+                <input name="abstract" type="text" placeholder="摘要" value="{$info.abstract}"/>
+            </li>
+			<li>
+                <span>详情</span></br>
+				<div>
+					<textarea class="span12 ckeditor" id="note"  name="note" title="" style="height:300px">{$info.note}</textarea>
+				</div>
+            </li>
+			
+			<li>
+                <span>链接</span>
+                <input name="link" type="text" placeholder="不填则进入详情页" value="{$info.link}"/>
+            </li>
+			<li>
+                <span>状态</span>
+                {eq name="$info['status']" value="-2"}等待审核{/eq}
+				{eq name="$info['status']" value="-1"}审核未通过{/eq}
+				{eq name="$info['status']" value="0"}禁用{/eq}
+				{eq name="$info['status']" value="1"}正常{/eq}
+            </li>
+            </ul>
+			
+            <div style=" height:30px"></div>
+            <div class="field submit-btn">
+				<input type="submit" class="btn_big1" value="提交保存" id="saveBtn" style="background:#4169E1"/>
+			</div>
+            {:token()}
+        </form>
+    </div>
+</div>
+<script src="/static/admin/js/jquery.min.js?v=2.1.4"></script>
+<script src="/static/admin/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="/static/admin/js/jquery.easyui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/admin/webupload/webuploader.css">
+<script type="text/javascript" src="/static/admin/webupload/webuploader.min.js"></script>
+<script type="text/javascript">
+    /*表单提交*/
+    $("#saveBtn").click(function(){
+		var name = $("input[name=title]").val();
+        if( name == ''){
+            layer.open({content:'请输入标题',time: 1});
+            return false;
+        }
+        mobileAjaxFormBtn("{:url('mobile/Myshop/noteHandle',['ids'=>$id,'cate_id'=>$cate_id])}",'btnForm');
+    });
+
+</script>
+</body>
+</html>
+
+<!--以下是在线编辑器 代码 -->
+<link rel="stylesheet" type="text/css" href="/static/admin/wangeditor/css/wangEditor.min.css">
+<!--//防xss攻击js-->
+<script src="/static/admin/js/xss.js"></script>
+
+<!--引入jquery和wangEditor.js-->   <!--注意：javascript必须放在body最后，否则可能会出现问题-->
+<script type="text/javascript" src="/static/admin/wangeditor/js/wangEditor.js"></script>
+
+<!--这里引用jquery和wangEditor.js-->
+<script type="text/javascript">
+    var editor = new wangEditor('note');
+    // 自定义菜单配置
+    editor.config.menus = [
+        'bold',
+        'underline',
+        'italic',
+        'forecolor',
+        'fontfamily',
+        'fontsize',
+        'unorderlist',
+        'orderlist',
+        'alignleft',
+        'aligncenter',
+        'alignright',
+        'link',
+        'unlink',
+        'table',
+        'emotion',
+        'img',
+        'video',
+        'location',
+        'undo',
+        'redo',
+        'fullscreen'
+    ];
+    // 配置自定义表情
+    editor.config.emotions = {
+        'default': {
+            title: '常用',  // 组名称
+            data: '/static/admin/wangeditor/js/emotions.data'
+        },
+        /* 第二组，id叫做'weibo'*/
+        'weibo': { title: '微博表情', /* 组名称*/ data: [/* data 还可以直接赋值为一个表情包数组*/ {icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/7a/shenshou_thumb.gif', value: '[草泥马]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/60/horse2_thumb.gif', value: '[神马]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/fuyun_thumb.gif', value: '[浮云]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c9/geili_thumb.gif', value: '[给力]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/f2/wg_thumb.gif', value: '[围观]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/70/vw_thumb.gif', value: '[威武]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6e/panda_thumb.gif', value: '[熊猫]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/81/rabbit_thumb.gif', value: '[兔子]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/bc/otm_thumb.gif', value: '[奥特曼]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/15/j_thumb.gif', value: '[囧]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/89/hufen_thumb.gif', value: '[互粉]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c4/liwu_thumb.gif', value: '[礼物]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/ac/smilea_thumb.gif', value: '[呵呵]'}, { icon: 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/0b/tootha_thumb.gif', value: '[哈哈]'}]}
+    };
+    editor.config.pasteFilter = false;// 粘贴过滤
+    // 只粘贴纯文本
+    // （注意，如果你在上面设置了 editor.config.pasteFilter = false 那么这个粘贴纯文本的设置将失效）
+    editor.config.pasteText = false;
+
+    // 上传图片
+    editor.config.uploadImgUrl = "{:url('Uploadify/editUpload')}";
+    editor.config.uploadImgFileName = 'myfile'// 配置上传文件名
+
+    // 配置自定义参数
+    editor.config.uploadParams = {
+        path:'goods'
+    };
+    // 设置 headers
+    editor.config.uploadHeaders = {
+        'Accept' : 'text/x-json'
+    };
+    // 隐藏掉插入网络图片功能。该配置，只有在你正确配置了图片上传功能之后才可用。
+    editor.config.hideLinkImg = false;
+    editor.create();
+</script>
+<!--以上是在线编辑器 代码  end-->

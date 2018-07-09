@@ -1,0 +1,65 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="tpshop" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>我的商品-{$Think.config.web_site_title}</title>
+    {include file="public/head" /}
+    <link rel="stylesheet" href="/static/mobile/css/flow.css">
+    <link rel="stylesheet" href="/static/mobile/css/style_jm.css">
+</head>
+<body style="background: rgb(235, 236, 237);position:relative;">
+<!--购物车头部 start-->
+<div class="tab_nav">
+    <div class="header">
+        <div class="h-left">
+            <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a>
+        </div>
+        <div class="h-mid">我的商品</div>
+    </div>
+</div>
+<!--购物车头部 end-->
+
+<!--购物车商品列表 start-->
+<div class="screen-wrap fullscreen login">
+    <div class="page-shopping ">
+        <div class="cart_list">
+            <form id="cart_form" name="formCart" method="post">
+
+            </form>
+        </div>
+    </div>
+    <div style="height:72px;"></div>
+</div>
+
+<script type="text/javascript">
+    // ajax 请求获取购物车列表
+    $(document).ready(function(){
+        ajaxCartList();
+    });
+    // ajax 提交购物车
+    var before_request = 1; // 上一次请求是否已经有返回来, 有才可以进行下一次请求
+    function ajaxCartList(){
+        if(before_request ==0){ // 上一次请求没回来 不进行下一次请求
+            return false;
+        }
+        before_request = 0;
+        $.ajax({
+            type : "POST",
+            url:"{:url('mobile/myshop/ajaxGoodsList',['cate_id'=>$cate_id])}",//+tab,
+            data : $('#cart_form').serialize(),// 你的formid
+            success: function(data){
+                $("#cart_form").html('');
+                $("#cart_form").append(data);
+                before_request = 1;
+            },
+            error:function(){
+                layer.open({content:'网络错误,请稍后再试',time: 1});
+                return false;
+            }
+        });
+    }
+</script>
+</body>
+</html>

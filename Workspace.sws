@@ -4,8 +4,7 @@
 
 <Workspace>
 	<Local Expanded="Yes">
-		<Model Expanded="Yes" ID="{8DBE334D-9282-4ED3-A77D-920DE9C187B1}" Name="ZMT" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="ZMT.pdm"/>
-		<Model Expanded="Yes" ID="{3513CF6F-E667-4DB6-996C-160380AD657D}" Name="ZMT" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="ZMT0708.pdm"/>
+		<Model Expanded="Yes" ID="{8DBE334D-9282-4ED3-A77D-920DE9C187B1}" Loaded="No" Name="ZMT" Type="{CDE44E21-9669-11D1-9914-006097355D9B}" URL="ZMT.pdm"/>
 	</Local>
 	<BrowserModule Name="Repository"/>
 </Workspace>

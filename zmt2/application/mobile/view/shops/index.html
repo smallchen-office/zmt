@@ -1,0 +1,94 @@
+<!DOCTYPE html >
+<html>
+<head>
+    <meta name="Generator" content="TPshop v1.1" />
+    <meta charset="urlTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>商户入口-{$Think.config.web_site_title}</title>
+    {include file="public/head" /}
+    <link rel="stylesheet" type="text/css" href="/static/mobile/css/index.css"/>
+    <script type="text/javascript" src="/static/mobile/js/TouchSlide.1.1.js"></script>
+</head>
+<body>
+<div id="page" class="showpage">
+    <div>
+        <!-- <!--头部开始--> 
+        <!-- <header id="header" style="position:fixed;max-width:640px;z-index:97;"> -->
+            <!-- <a href="{:url('Goods/categoryList')}" class="top_bt"></a> -->
+            <!-- <span href="javascript:void(0)" class="logo">{$Think.config.web_site_title}</span> -->
+        <!-- </header> -->
+		<!-- <div style="height:45px"></div> -->
+        <!--头部结束-->
+		
+        <!--首页banner广告轮播980*400开始-->
+        <div id="scrollimg" class="scrollimg">
+            <div class="bd">
+                <ul>
+                    {zhjaa:adv pid="5" limit="4" item="mm"}
+						<li><a href="{$mm.link}" {eq name="mm.is_target" value="1"}target="_blank"{/eq}> <img src="{$mm.images}" title="" width="100%"/></a></li>
+                    {/zhjaa:adv}
+                </ul>
+            </div>
+            <div class="hd">
+                <ul></ul>
+            </div>
+        </div>
+        <script type="text/javascript">
+            TouchSlide({
+                slideCell:"#scrollimg",
+                titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+                mainCell:".bd ul",
+                effect:"leftLoop",
+                autoPage:true,//自动分页
+                autoPlay:true //自动播放
+            });
+        </script>
+        <!--首页banner广告轮播980*400结束-->
+    </div>
+	<!-- <div style="width:100%;text-align: center;font-size:0.5rem;margin-bottom:15px;"></div> -->
+	<a href="javascript:history.go(-1);">
+	<div style="height:35px;font-size:16px;text-align: center;">	
+		<em style="width:3px; height:15px; background:#E4010D; margin-right:5px; margin-top:10px; float:left;"></em>
+		<span style="text-align: center;">{$info.name}(绿色代表有权限进入)</span>
+	</div></a>
+	<div class="entry-list clearfix">
+		<nav >
+			<ul style="width:90%">
+				{foreach cate_list as $k=>$v}
+					<li style="width:25%;float:left;">
+						<a href="{eq name='$v.is_true' value='1'}{:url('mobile/shops/auth2',['cate_id'=>$v.id,'id'=>$id])}{else}javascript:alert('权限未申请');{/eq}" style="width:95%">
+							<div style="position:relative;margin:0;border-radius:20px;overflow:hidden;border:1px solid {eq name='$v.is_true' value='1'}green{else}#eee{/eq};">
+								<img alt="{$v.name}" src="{$v.images}" style="width:71px;height:60px"/>
+								<p style="font-size:0.5rem;background:rgba(0,0,0,0.6);color:#fff;text-align:center;width:100%;">{$v.name}{$v.is_true}</p>
+							</div>
+						</a>
+					</li>
+				{/foreach}
+			</ul>
+		</nav>
+	</div>
+</div>
+<div style="height:50px"></div>
+{include file="public/footer_nav" /}
+
+<script type="text/javascript">
+//    点击搜索框触发 start
+    $(function() {
+        $('#search_text').click(function(){
+            $(".showpage").children('div').hide();
+            $("#search_hide").css('position','fixed').css('top','0px').css('width','100%').css('z-index','999').show();
+        })
+        $('#get_search_box').click(function(){
+            $(".showpage").children('div').hide();
+            $("#search_hide").css('position','fixed').css('top','0px').css('width','100%').css('z-index','999').show();
+        })
+        $("#search_hide .close").click(function(){
+            $(".showpage").children('div').show();
+            $("#search_hide").hide();
+        })
+    });
+//    点击搜索框触发 end
+
+</script>
+</body>
+</html>

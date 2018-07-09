@@ -1,0 +1,57 @@
+{include file="public/header" /}
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>基础资料·店铺分类</h5>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <a href="{:url('shopCateHandle',['id'=>0])}" class="btn btn-primary "><i class="fa fa-plus"></i> 添加分类</a>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="table-responsive ">
+                            <table class="table   table-hover">
+                                <thead>
+                                <tr>
+                                    <th width="5%">ID</th>
+                                    <th width="20%">名称</th>
+									<th>备注</th>
+									<th width="10%">创建时间</th>
+									<th width="10%">更新时间</th>
+                                    <th width="15%">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {empty name="lists"}
+									<tr><td colspan="20" style="padding-top:10px;padding-bottom:10px;font-size:16px;text-align:center">暂无数据</td></tr>
+                                {else/}
+                                {foreach $lists as $v}
+                                <tr>
+                                    <td>{$v.id}</td>
+                                    <td>{$v.name}</td>
+									<td>{$v.detail}</td>
+									<td>{$v.create_at}</td>
+									<td>{$v.update_at}</td>
+                                    <td>
+                                        <a href="{:url('shopCateHandle',['id'=>$v.id])}" title="编辑"><span class="glyphicon glyphicon-edit"></span>&nbsp;编辑</a>&nbsp;&nbsp;
+                                        <a onclick="delBtn(this)" data-id="{$v.id}" data-name="{$v.name}" data-url="{:url('delShopCate')}"><span class="glyphicon glyphicon-trash"></span>&nbsp;删除</a>&nbsp;&nbsp;
+                                    </td>
+                                </tr>
+                                {/foreach}
+                                {/empty}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="public/footer" /}
+</body>
