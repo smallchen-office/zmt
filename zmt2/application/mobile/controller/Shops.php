@@ -9,9 +9,10 @@ namespace app\mobile\controller;
 use app\common\model\Auth;
 use app\common\model\GoodsDetail;
 use app\common\model\Shop;
-use app\common\model\ShopCate;
+use app\common\model\Cate;
 use app\common\model\ShopGroup;
 use app\common\model\GoodsCate;
+use app\common\model\ShopCateAuth;
 use app\common\model\GoodsStock;
 use think\Config;
 use think\Cookie;
@@ -28,50 +29,42 @@ class Shops extends Base{
         parent::_initialize();
 		$this->auth = new Auth();
 		$this->goods_detail = new GoodsDetail();
-		$this->shop_cate = new ShopCate();
+		$this->cate = new Cate();
 		$this->goods_cate = new GoodsCate();
 		$this->shop_group = new ShopGroup();
 		$this->goods_stock = new GoodsStock();
+		$this->shop_cate_auth = new ShopCateAuth();
 		$this->shop = new Shop();
-        $this->shop_id = Cookie::get('shop_id');
 		$this->user_id = Cookie::get('user_id');
-
-        if((!$this->user_id) && (!$this->shop_id)){
+		$this->user_info = Cookie::get('user_info');
+        if((!$this->user_id)){
             header("location:".Url::build('mobile/Users/login'));
             exit;
         }
-        $this->assign('shop_id',$this->shop_id);
+		$this->assign('user_info',$this->user_info);
     }
-
-
     public function Auth()
     {
-		$cate_list = $this->goods_cate->where(['pid'=>0,'status'=>1])->select();
-		$auth_ids =$this->shop_cate->where('id',input('param.id'))->value('auth');
-		$info = $this->shop_cate->where('id',input('param.id'))->find();
-		$cate_list2 = $this->shop_group->where(['shop_id'=>$this->shop_id,'auth_id'=>['in',$auth_ids],'status'=>1])->column('cate_id');
-		foreach($cate_list as $k=>$v){
-			if(in_array($v['id'],$cate_list2)){
-				$cate_list[$k]['is_true'] = 1;
-			}else{
-				$cate_list[$k]['is_true'] = 0;
-			}
-		}
-		//print_r($cate_list2);
+		$id = input('param.id');
+		$info = $this->shop->where(['shop_cate_id'=>$id,'user_id'=>$this->user_id,'status'=>1])->find();
+		$cates = $this->shop_cate_auth->where(['shop_id'=>$info['id'],'shop_cate_id'=>$id,'status'=>1])->column('goods_cate_id');
+		$cate_list = $this->goods_cate->where(['id'=>['in',$cates],'pid'=>0,'status'=>1])->order('sort asc')->select();
 		return view('shops/index',[
-				'cate_list'=>$cate_list,
+				'id'=>$id,
 				'info'=>$info,
-				'id'=>input('param.id'),
+				'cate_list'=>$cate_list,
 			]);
     }
 	public function Auth2(){
 		$id = input('param.id');
 		$cate_id = input('param.cate_id');
 		$pid = input('param.pid')?input('param.pid'):0;
-		$info = $this->auth->where(['status'=>1,'id'=>$pid])->find();
-		$info['long_href'] = getTableColumn('shop_cate','name',['id'=>$id ]).'-'.getTableColumn('goods_cate','name',['id'=>$cate_id ]).$info['long_href'];
-		$auth_ids = $this->shop_group->where(['shop_id'=>$this->shop_id,'cate_id'=>$cate_id,'status'=>1])->column('auth_id');
-		$auth_list = $this->auth->where(['status'=>1,'pid'=>$pid])->column('id,pid,name,images,control');
+		$info = $this->auth->where(['id'=>$pid])->find();
+		$shop_info = $this->shop->where(['shop_cate_id'=>$id,'user_id'=>$this->user_id,'status'=>1])->find();
+		$shop_cate = $this->cate->where(['id'=>$id,'status'=>1])->value('auth');
+		$auth_list = $this->auth->where(['pid'=>$pid,'status'=>1,'id'=>['in',$shop_cate]])->order('sort asc')->column('id,pid,name,long_name,href,logo');
+		
+		$info['long_name'] = getTableColumn('cate','name',['id'=>$id ]).'-'.getTableColumn('goods_cate','name',['id'=>$cate_id ]).$info['long_name'];
 		return view('shops/index2',[
 				'cate_id'=>$cate_id,
 				'pid'=>$pid,

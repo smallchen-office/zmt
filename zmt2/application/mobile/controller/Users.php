@@ -91,20 +91,7 @@ class Users extends Base{
 		$id = $this->user_id;
 		if(request()->isPost()){
             $dt = input("param.");
-            if($id >0){//修改
-				if($id==1){
-					//$data['username'] = trimall($dt['username']);
-					if(!empty(trimall($dt['password']))){
-						$data['password'] = encrypt(trimall($dt['password']));
-					}
-					$data['author'] = trimall($dt['realname']);
-					$data['telephone'] = trimall($dt['telephone']);
-					$rs = $this->shop->ShopHandle($data,$id);
-				}
-				else{
-					$rs = $this->admin_users->handle($dt,$id);
-				}	
-            }
+			$rs = $this->users->handle($dt,$id);
             if($rs['code'] ==1){
 				return ['code'=>1,'msg'=>'修改成功','url'=>'/mobile/users/index'];	
 			}

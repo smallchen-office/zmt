@@ -49,17 +49,17 @@
 	<a href="javascript:history.go(-1);">
 	<div style="height:35px;font-size:16px;text-align: center;">	
 		<em style="width:3px; height:15px; background:#E4010D; margin-right:5px; margin-top:10px; float:left;"></em>
-		<span style="text-align: center;">{$info.name}(绿色代表有权限进入)</span>
+		<span style="text-align: center;">{$info.name}</span>
 	</div></a>
 	<div class="entry-list clearfix">
 		<nav >
 			<ul style="width:90%">
 				{foreach cate_list as $k=>$v}
 					<li style="width:25%;float:left;">
-						<a href="{eq name='$v.is_true' value='1'}{:url('mobile/shops/auth2',['cate_id'=>$v.id,'id'=>$id])}{else}javascript:alert('权限未申请');{/eq}" style="width:95%">
-							<div style="position:relative;margin:0;border-radius:20px;overflow:hidden;border:1px solid {eq name='$v.is_true' value='1'}green{else}#eee{/eq};">
+						<a href="{:url('mobile/shops/auth2',['cate_id'=>$v.id,'id'=>$id])}" style="width:95%">
+							<div style="position:relative;margin:0;border-radius:20px;overflow:hidden;border:1px solid green;">
 								<img alt="{$v.name}" src="{$v.images}" style="width:71px;height:60px"/>
-								<p style="font-size:0.5rem;background:rgba(0,0,0,0.6);color:#fff;text-align:center;width:100%;">{$v.name}{$v.is_true}</p>
+								<p style="font-size:0.5rem;background:rgba(0,0,0,0.6);color:#fff;text-align:center;width:100%;">{$v.name}</p>
 							</div>
 						</a>
 					</li>

@@ -48,16 +48,16 @@
 	<a href="javascript:history.go(-1);">
 	<div style="height:35px;font-size:16px;">
 		<em style="width:3px; height:15px; background:#E4010D; margin-right:5px; margin-top:10px; float:left;"></em>
-		{$info.long_href}
+		{$info.long_name}
 	</div></a>
 	<div class="entry-list clearfix">
 		<nav >
 			<ul style="width:90%">
 				{foreach auth_list as $k=>$v}
 					<li style="width:25%;float:left;">
-						<a href="{eq name='$v.control' value=''}{:url('mobile/shops/auth2',['cate_id'=>$cate_id,'id'=>$id,'pid'=>$v.id])}{else}{$v.control}/cate_id/{$cate_id}/id/{$id}{/eq}" style="width:95%">
+						<a href="{eq name='$v.href' value=''}{:url('mobile/shops/auth2',['cate_id'=>$cate_id,'id'=>$id,'pid'=>$v.id])}{else}{$v.control}/cate_id/{$cate_id}/id/{$id}{/eq}" style="width:95%">
 							<div style="position:relative;margin:0;border-radius:20px;overflow:hidden;border:1px solid green;">
-								<img alt="{$v.name}" src="{$v.images}" style="width:;"/>
+								<img alt="{$v.name}" src="{$v.logo}" style="width:100%;height:60px;"/>
 								<span style="font-size:0.5rem;text-align:center;width:100%;">{$v.name}</span>
 							</div>
 						</a>
@@ -70,24 +70,5 @@
 <div style="height:50px"></div>
 {include file="public/footer_nav" /}
 
-<script type="text/javascript">
-//    点击搜索框触发 start
-    $(function() {
-        $('#search_text').click(function(){
-            $(".showpage").children('div').hide();
-            $("#search_hide").css('position','fixed').css('top','0px').css('width','100%').css('z-index','999').show();
-        })
-        $('#get_search_box').click(function(){
-            $(".showpage").children('div').hide();
-            $("#search_hide").css('position','fixed').css('top','0px').css('width','100%').css('z-index','999').show();
-        })
-        $("#search_hide .close").click(function(){
-            $(".showpage").children('div').show();
-            $("#search_hide").hide();
-        })
-    });
-//    点击搜索框触发 end
-
-</script>
 </body>
 </html>

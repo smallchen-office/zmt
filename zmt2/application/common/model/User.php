@@ -43,33 +43,42 @@ class User extends Model{
      *@param $data数据
      *@param $id >0表示修改、否则表示添加
      */
+    /**
+     * 添加|修改
+     *@param $data数据
+     *@param $id >0表示修改、否则表示添加
+     */
     public function handle($data,$id=0)
     {
-        $data['nickname'] = trimall($data['nickname']);
+        unset($data['id']);
         if(empty(trimall($data['password']))){
             unset($data['password']);
         }else{
             $data['password'] = encrypt(trimall($data['password']));
         }
-        $validate = Loader::validate('UsersValidate');
-        if(!$validate->check($data)){
-            return ['code'=>0,'data'=>'','msg'=>$validate->getError()];
-        }
         if($id >0){
             $data['update_at'] = date('Y-m-d H:i:s',time());
             try{
-                    $this->allowField(true)->save($data,['id'=>$id]);
-                    adminLog("修改会员[".$data['nickname']."]",req('url'));
-                    return ['code'=>1,'data'=>'','msg'=>'会员修改成功'];
+                $result = $this->allowField(true)->where(['id'=>$id])->update($data);
+                if(false ===$result){
+                    return ['code'=>0,'data'=>'','msg'=>$this->getError()];
+                }else{
+                    return ['code'=>1,'data'=>'','msg'=>'管理员修改成功'];
+                }
             }catch(\PDOException $e){
                 return ['code'=>0,'data'=>'','msg'=>$e->getMessage()];
             }
         }else{
-            $data['created_at'] = date('Y-m-d H:i:s',time());
+			$data['username'] = trimall($data['username']);
+            $data['create_at'] = date('Y-m-d H:i:s',time());
             try{
-                    $this->allowField(true)->save($data);
-                    adminLog("添加会员[".$data['nickname']."]",req('url'));
-                    return ['code'=>1,'data'=>'','msg'=>'会员添加成功'];
+                $result = $this->allowField(true)->insertGetId($data);
+
+                if(false === $result){
+                    return ['code'=>0,'data'=>$id,'msg'=>$this->getError()];
+                }else{
+                    return ['code'=>1,'data'=>$id,'msg'=>'管理员添加成功'];
+                }
             }catch(\PDOException $e){
                 return ['code'=>0,'data'=>'','msg'=>$e->getMessage()];
             }
