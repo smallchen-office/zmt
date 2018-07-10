@@ -7,7 +7,7 @@
  */
 namespace app\mobile\controller;
 use app\home\logic\UserLogic;
-use app\mobile\logic\Jssdk;
+
 use think\Config;
 use think\Controller;
 use think\Cookie;
@@ -17,16 +17,20 @@ use think\Session;
 
 class Base extends Controller{
     protected $session_id;
-    protected $wx_config;
     protected $cateTree;
     protected $mpage;
+
     protected function _initialize()
     {
         parent::_initialize();
-        Session::start();//启动session以获取session_id
+        //Session::start();//启动session以获取session_id
         $this->session_id = session_id();
         $this->cateTree = [];
-        define('SESSION_ID',$this->session_id); //将当前的session_id保存为常量，供其它方法调用
+        //define('SESSION_ID',$this->session_id); //将当前的session_id保存为常量，供其它方法调用
+		
+		$this->user_id = Cookie::get('user_id');
+		$this->area_id = Cookie::get('area_id');
+		
         needCacheConfig('system_config_data');//判断是否需要缓存配置文件
 
         //判断当前用户是否为手机

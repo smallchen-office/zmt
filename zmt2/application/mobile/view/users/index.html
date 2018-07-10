@@ -5,8 +5,7 @@
     <meta charset="urlTF-8">
     <meta name="viewport" content="width=device-width">
     <title>个人中心-{$Think.config.web_site_title}</title>
-    {include file="public/head" /}
-
+    {include file="public/header" /}
 </head>
 <body>
 <div id="tbh5v0">
@@ -14,22 +13,11 @@
         {include file="public/user_top" /}
     </div>
     <div class="Wallet">
-        <ul>
-            <li class="bain1"><strong>￥{:number_format($shop_info.realmoney,2)}元</strong><span>剩余余额</span></li>
-            <li class="bain1"><strong>￥{:number_format($shop_info.freezemoney,2)}元</strong><span>冻结余额</span></li>
-            <li><strong>{:getOrderNum($shop_info.id)}</strong><span>订单数</span></li>
-        </ul>
-    </div>
-    <div class="Wallet">
         <a href="#" ><em class="Icon Icon2"></em><dl class="b"><dt>我的订单</dt><dd>查看订单</dd></dl></a>
 		<a href="{:url('mobile/role/index')}" ><em class="Icon Icon7"></em><dl class="b"><dt>我的权限</dt><dd>查看权限</dd></dl></a>
-        <a href="#"><em class="Icon Icon10"></em><dl class="b"><dt>我的需求</dt><dd>&nbsp;</dd></dl></a>	
     </div>
     <div class="Wallet">
-        
-        <a href="#"><em class="Icon Icon6"></em><dl class="b"><dt>我的管理员</dt><dd>&nbsp;</dd></dl></a>
         <a href="#"><em class="Icon Icon4"></em><dl class="b"><dt>我的留言</dt><dd>&nbsp;</dd></dl></a>
-        <a href="#"><em class="Icon Icon11"></em><dl class="b"><dt>行情分析</dt><dd>&nbsp;</dd></dl></a>
     </div>
     <div class="Wallet">
         <a href="{:url('mobile/Users/logout')}"><em class="Icon Icon8"></em><dl><dt>退出登录</dt></dl></a>
@@ -37,6 +25,6 @@
 	<div style="height:50px"></div>
 </div>
 {include file="public/footer_nav" /}
-
+{include file="public/footer" /}
 </body>
 </html>

@@ -6,10 +6,7 @@
  * Time: 10:09
  */
 namespace app\mobile\controller;
-use app\common\model\Shop;
-use app\common\model\ShopCate;
-use app\common\model\AdminUsers;
-use app\common\model\AdminShop;
+use app\common\model\User;
 use think\Config;
 use think\Cookie;
 use think\Db;
@@ -17,51 +14,42 @@ use think\Session;
 use think\Url;
 
 class Users extends Base{
-    protected $shop_info;
     protected $user_id;
     protected $userAddress;
     protected $region;
-    protected $userLogic;
     protected $order;
     protected $mpage;
     protected function _initialize()
     {
         parent::_initialize();
-		$this->shop = new Shop();
-		$this->shop_cate = new ShopCate();
-		$this->admin_users = new AdminUsers();
-		$this->admin_shop = new AdminShop();
-		
-        $this->mpage = Config::get('mobile_page')?:5;
-		
-		$this->shop_id = Cookie::get('shop_id');
+		$this->users = new User();
 		$this->user_id = Cookie::get('user_id');
+		$this->user_info = Cookie::get('user_info');
         //登录状态判断
         $no_login = [
             'login', 'popLogin', 'doLogin', 'logout', 'verify', 'setPwd', 'finished',
             'verifyHandle', 'reg', 'sendSmsRegCode', 'findPwd', 'checkValidateCode',
             'forgetPwd', 'checkCaptcha', 'checkUsername', 'sendValidateCode', 'express',
         ];
-
-        if((!$this->user_id)  && (!in_array(req('action'),$no_login)) && (!$this->shop_id)){
+		
+        if((!$this->user_id)  && (!in_array(req('action'),$no_login))){
             header("location:".Url::build('mobile/Users/login'));
             exit;
         }
-        $this->assign('shop_id',$this->shop_id);
+		$this->assign('user_info',$this->user_info);
     }
     /*用户中心*/
     public function index()
     {
-		$shop_info = $this->shop->getColumn(['id'=>$this->shop_id],'*',1);
-		$cate_info = $this->shop_cate->where('id',$shop_info['cate_id'])->find();
-		$shop_info['cate_name'] = $cate_info['name'];
+		
 		return view("users/index",[
-				'shop_info'=>$shop_info,
+				
 			]);
     }
     /*用户登录*/
     public function login()
     {
+
 		if($this->user_id > 0 ){
             header("location:".Url::build('mobile/Users/index'));
             exit;
@@ -72,57 +60,19 @@ class Users extends Base{
 				return ['code'=>0,'msg'=>'用户名不能为空','url'=>''];
 			if($data['password']==='')
 				return ['code'=>0,'msg'=>'登陆密码不能为空','url'=>''];
-			if(!strpos($data['username'],'@')){
-				$shop_info = $this->shop->getColumn(['username'=>$data['username'],'password'=>encrypt($data['password'])],'*',1);
-				if($shop_info){
-					if($shop_info['status'] ==-2){
-						return ['code'=>0,'msg'=>'店铺仍在审核中,请保持电话畅通！','url'=>''];	
-					}
-					if($shop_info['status'] ==-1){
-						return ['code'=>0,'msg'=>'店铺已被禁用,请联系客服！','url'=>''];	
-					}
-					Cookie::set('shop_id',$shop_info['id']);
-					Cookie::set('user_id',1);
-					$this->shop->where('id',$shop_info['id'])->update(['update_at'=>date('Y-m-d H:i:s',time())]);
-					return ['code'=>1,'msg'=>'登录成功！','url'=>'/mobile/users/index'];	
+			$user_info = $this->users->getColumn(['username'=>$data['username'],'password'=>encrypt($data['password'])],'*',1);
+			if($user_info){
+				if($user_info['status'] ==0){
+					return ['code'=>0,'msg'=>'账户被禁用！','url'=>''];	
 				}
-				else{
-					return ['code'=>0,'msg'=>'用户名或密码错误1','url'=>''];
-				}
+				Cookie::set('user_id',$user_info['id']);
+				Cookie::set('user_info',$user_info);
+				$this->users->where('id',$user_info['id'])->update(['last_at'=>date('Y-m-d H:i:s',time()),'last_ip'=>req('ip')]);
+				return ['code'=>1,'msg'=>'登录成功！','url'=>'/mobile/users/index'];	
 			}
-			else
-			{
-				$users=explode('@',$data['username'],2);
-				$username=$users[0];
-				$shopid=$users[1];	
-				$shop_info = $this->shop->getColumn(['id'=>$shopid],'*',1);
-				if($shop_info){
-					if($shop_info['status'] ==-2){
-						return ['code'=>0,'msg'=>'店铺仍在审核中,请保持电话畅通！','url'=>''];	
-					}
-					if($shop_info['status'] ==-1){
-						return ['code'=>0,'msg'=>'店铺已被禁用,请联系客服！','url'=>''];	
-					}
-				}
-				$user_info = $this->admin_users->getColumn(['username'=>$username,'password'=>encrypt($data['password']),'status'=>0],'*',1);
-				if($user_info){
-					$result = $this->admin_shop->getColumn(['admin_id'=>$user_info['id'],
-											'shop_id'=>$shopid,
-											],'*',1);
-					if($result){
-						Cookie::set('shop_id',$shopid);
-						Cookie::set('user_id',$user_info['id']);
-						return ['code'=>1,'msg'=>'登录成功！','url'=>'/mobile/users/index'];	
-					}
-					else{
-						return ['code'=>0,'msg'=>'标记错误','url'=>''];	
-					}
-				}
-				else{
-					return ['code'=>0,'msg'=>'用户名或密码错误2','url'=>''];	
-				}
+			else{
+				return ['code'=>0,'msg'=>'用户名或密码错误','url'=>''];
 			}
-
 		}
 		else
 			return view('users/login');
@@ -162,14 +112,7 @@ class Users extends Base{
 				return ['code'=>0,'msg'=>$rs['msg'],'url'=>''];
 			}
         }
-		if($id==1){
-			$info = $this->shop->getColumn(['id'=>$id],'username,author,telephone',1);
-			$info['realname']=$info['author'];
-			unset($info['author']);
-		}
-		else{
-			$info = $this->admin_users->getColumn(['id'=>$id],'username,realname,telephone',1);
-		}
+		$info = $this->users->getColumn(['id'=>$id],'username,realname,mobile,head_img',1);
         return view('users/userinfo',[
             'info'=>$info,
 			'id'=>$id,

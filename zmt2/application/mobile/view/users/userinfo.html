@@ -4,7 +4,7 @@
     <meta name="Generator" content="TPshop1.2" />
     <meta charset="urlTF-8">
     <meta name="viewport" content="width=device-width">
-    <title>编辑地址-{$Think.config.web_site_title}</title>
+    <title>设置-{$Think.config.web_site_title}</title>
     
    
 <link href="/static/admin/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
@@ -12,14 +12,6 @@
  {include file="public/head" /}
 </head>
 <body>
-<header>
-    <div class="tab_nav">
-        <div class="header">
-            <div class="h-left"><a class="sb-back" href="javascript:history.back(-1)" title="返回"></a></div>
-            <div class="h-mid">设置</div>
-        </div>
-    </div>
-</header>
 {include file="public/right_menu" /}
 <div id="tbh5v0">
     <div class="addressmone">
@@ -39,8 +31,15 @@
             </li>
             <li>
                 <span>手机</span>
-                <input type="text" name="telephone" maxlength="15" placeholder="手机号码" value="{$info.telephone}"/>
+                <input type="text" name="mobile" maxlength="15" placeholder="手机号码" value="{$info.mobile}"/>
             </li>
+			<li style="height:100px">
+				<span>封面图片：</span>
+				<a  class="btn btn-info" href="javascript:void(0);" style="float: left;margin-top:20px;" uploader="head_img" data-url="{:url('Uploadify/jqUpload')}" data-path="head" >+ 浏览文件
+					<input type="hidden" name="head_img" id="head_img" value="{$info.head_img}">
+				</a>
+				<img  height="100px" id="head_img_img" style="float:left;margin-left: 30px;" onerror="this.src='/static/admin/images/no_img.jpg'" src="{$info.head_img}"/>
+			</li>
             </ul>
             <div style=" height:30px"></div>
             <div class="field submit-btn">

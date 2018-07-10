@@ -1,12 +1,12 @@
 <div class="com_top">
     <h2><a href="{:url('mobile/Users/userinfo')}">设置</a></h2>
     <p class="tuij_cas">
-        {$shop_info.name}
+        {$user_info.realname}
     </p>
     <dl>
         <dt>
-            <a href="{:url('mobile/Users/userinfo')}"><img src="\static\mobile\images\1440439257667525408.png" alt="{$shop_info.name}" ></a>
-			<dd>{$shop_info.cate_name}</dd>
+            <a href="{:url('mobile/Users/userinfo')}"><img src="{$user_info.head_img}" alt="{$user_info.username}" ></a>
+			<dd>{$user_info.username}</dd>
         </dt>
     </dl>
 </div>

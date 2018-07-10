@@ -306,7 +306,7 @@
 .addressmone{ width:100%; overflow:hidden; background:#fff}
 .addressmone ul{ width:95%; overflow:hidden; margin:auto}
 .addressmone ul li{ width:100%; overflow:hidden; border-bottom:1px solid #CCC;}
-.addressmone ul li span{ display:block; float:left; width:30%; font-size:14px; line-height:45px; color:#666;}
+.addressmone ul li span{ display:block; float:left; width:25%; font-size:14px; line-height:45px; color:#666;}
 .addressmone ul li input{ display:block; float:left; width:60%; background:none; border:0px; font-size:16px; color:#333; line-height:45px;}
 .addressmone ul li select{ display:block; float:left;background:none; height:45px; border:0px; font-size:16px; color:#333; line-height:45px; padding-right:10px;-webkit-appearance: none; -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; border-radius: 0; -webkit-rtl-ordering: logical; -webkit-user-select: text;}
 

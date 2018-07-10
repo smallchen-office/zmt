@@ -8,14 +8,24 @@
     {include file="public/header" /}
     <link rel="stylesheet" type="text/css" href="/static/mobile/css/index.css"/>
     <script type="text/javascript" src="/static/mobile/js/TouchSlide.1.1.js"></script>
-
+	<link rel="stylesheet" type="text/css" href="/static/mobile/css/hzw-city-picker.css"/>
+	<style>
+    #myAddrs {
+		width:20%;
+		text-align:center;
+        font-size: 16px;
+        border: 1px solid #bababa;
+        border-radius: 4px;
+        color: gray;
+    }
+    </style>
 </head>
 <body>
 <div id="page" class="showpage">
     <div>
         <!--头部结束-->
 		<div style="text-align:left">
-			<input type="text" readonly id="myAddrs" name="addr" data-key="4-84-1298" value="潍坊市 ▼" style="width:20%;text-align:center;"/>
+			<input type="text" readonly id="myAddrs" name="addr" data-key="4-84-1298"  value="{$area_name}"/>
 		</div>
         <!--首页banner广告轮播980*400开始-->
         <div id="scrollimg" class="scrollimg">
@@ -165,24 +175,39 @@
 
 {include file="public/footer_nav" /}
 {include file="public/footer" /}
-<script type="text/javascript">
-//    点击搜索框触发 start
-    $(function() {
-        $('#search_text').click(function(){
-            $(".showpage").children('div').hide();
-            $("#search_hide").css('position','fixed').css('top','0px').css('width','100%').css('z-index','999').show();
-        })
-        $('#get_search_box').click(function(){
-            $(".showpage").children('div').hide();
-            $("#search_hide").css('position','fixed').css('top','0px').css('width','100%').css('z-index','999').show();
-        })
-        $("#search_hide .close").click(function(){
-            $(".showpage").children('div').show();
-            $("#search_hide").hide();
-        })
-    });
-//    点击搜索框触发 end
 
+<script type="text/javascript" src="/static/mobile/js/city-data.js"></script>
+<script type="text/javascript" src="/static/mobile/js/hzw-city-picker.min.js"></script>
+<script>
+    var cityPicker = new HzwCityPicker({
+        data: data,
+        target: 'myAddrs',
+        valType: 'k-v',
+        hideCityInput: {
+            name: 'city',
+            id: 'city'
+        },
+        hideProvinceInput: {
+            name: 'province',
+            id: 'province'
+        },
+        callback: function(){
+			var area=$("#city").val().split('-',2);
+			$.ajax({
+				type: 'post',
+				url: "/mobile/index/changeAdd/area_id/"+area[0]+"/area_name/"+area[1],
+				success: function() {
+					layer.open({content:'切换成功',time: 1});
+					return false;
+				},
+				error:function(){
+					layer.open({content:'网络错误,请稍后再试',time: 1});
+					return false;
+				}
+			});
+        }
+    });
+    cityPicker.init();
 </script>
 </body>
 </html>

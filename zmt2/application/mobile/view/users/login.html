@@ -51,7 +51,24 @@
         }
     };
 	function checkSubmit(){
-		mobileAjaxFormBtn("{:url('mobile/users/login')}",'login_form');
+		$.ajax({
+			type: 'post',
+			url: "{:url('mobile/users/login')}",
+			data: $("#login_form").serialize(),
+			success: function(data) {
+				if(data.code ==1){
+					layer.open({content:data.msg,time: 1});
+					window.location = data.url;
+				}else{
+					layer.open({content:data.msg,time: 1});
+					return false;
+				}
+			},
+			error:function(){
+				layer.open({content:'网络错误,请稍后再试',time: 1});
+				return false;
+			}
+		});
 	}
 </script>	
 </body>
